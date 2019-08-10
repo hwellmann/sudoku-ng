@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material';
 
 @Component({
   selector: 'sudoku-root',
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'sudoku-ng';
+
+  @ViewChild(MatSidenav) readonly sidenav!: MatSidenav;
 
 }

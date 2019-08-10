@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatSidenav } from '@angular/material';
 
 export abstract class ToolbarApp {
@@ -19,5 +19,11 @@ export abstract class ToolbarApp {
     templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent {
+    @Output() sidenavOpened = new EventEmitter<void>();
+
     constructor(public app: ToolbarApp) { }
+
+    openSidenav(): void  {
+        this.sidenavOpened.emit();
+    }
 }
