@@ -1,15 +1,8 @@
 import { Component } from '@angular/core';
-
-export interface FieldCssClass {
-    initialClue: boolean;
-    selectedPosition: boolean;
-    lastSolvedField: boolean;
-    groupForLastSolvedField: boolean;
-    selectedDigit: boolean;
-    onlyOnePossibleDigit: boolean;
-}
+import { Sudoku } from 'app/generator/sudoku';
 
 export abstract class GridApp {
+    sudoku: Sudoku;
     abstract fieldClicked(row: number, col: number): void;
 }
 
