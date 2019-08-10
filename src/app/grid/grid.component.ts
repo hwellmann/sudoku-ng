@@ -10,11 +10,6 @@ export interface FieldCssClass {
 }
 
 export abstract class GridApp {
-    abstract readonly isUserDefined: boolean;
-    abstract readonly grid: number[][];
-    abstract readonly fieldCssClasses: FieldCssClass[][];
-    abstract readonly fieldStates: number[][];
-
     abstract fieldClicked(row: number, col: number): void;
 }
 

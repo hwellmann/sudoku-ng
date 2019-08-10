@@ -4,10 +4,6 @@ import { GridApp } from './grid/grid.component';
 
 @Injectable()
 export class GameController implements SidenavApp, GridApp {
-    isUserDefined: boolean;
-    grid: number[][];
-    fieldCssClasses: import("./grid/grid.component").FieldCssClass[][];
-    fieldStates: number[][];
 
     newGame(): void {
         console.log('new game');
