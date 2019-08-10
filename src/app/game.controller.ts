@@ -4,10 +4,10 @@ import { GridApp } from './grid/grid.component';
 import { Sudoku } from './generator/sudoku';
 import { Logger, getLogger } from '@log4js2/core';
 import { BacktrackingGenerator } from './generator/backtracking-generator';
+import { Cell, NUM_DIGITS } from './generator/cell';
 
 @Injectable()
 export class GameController implements SidenavApp, GridApp {
-
     sudoku: Sudoku = new Sudoku();
 
     private generator: BacktrackingGenerator = new BacktrackingGenerator();
@@ -32,4 +32,11 @@ export class GameController implements SidenavApp, GridApp {
     fieldClicked(row: number, col: number): void {
         console.log(`clicked row ${row}, column ${col}`);
     }
+
+    getField(row: number, col: number): Cell {
+        const index = (row - 1) * NUM_DIGITS + (col - 1);
+        return this.sudoku.getCell(index);
+    }
+
+
 }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Sudoku } from 'app/generator/sudoku';
+import { Cell } from 'app/generator/cell';
 
 export abstract class GridApp {
     sudoku: Sudoku;
     abstract fieldClicked(row: number, col: number): void;
+    abstract getField(row: number, col: number): Cell;
 }
 
 @Component({
