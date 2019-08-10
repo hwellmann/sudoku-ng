@@ -1,3 +1,4 @@
+import { configure, LogLevel } from '@log4js2/core';
 import 'jest-preset-angular';
 
 /* global mocks for jsdom */
@@ -28,3 +29,6 @@ Object.defineProperty(document.body.style, 'transform', {
 
 /* output shorter and more meaningful Zone error stack traces */
 // Error.stackTraceLimit = 2;
+configure({
+    level: LogLevel.INFO
+});
