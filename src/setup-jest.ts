@@ -27,8 +27,15 @@ Object.defineProperty(document.body.style, 'transform', {
   },
 });
 
+
+
 /* output shorter and more meaningful Zone error stack traces */
 // Error.stackTraceLimit = 2;
+
+const { SimpleConsole } = require('./SimpleConsole');
+global.console = new SimpleConsole(process.stdout, process.stderr);
+
+
 configure({
     level: LogLevel.INFO
 });
