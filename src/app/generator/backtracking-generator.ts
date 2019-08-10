@@ -1,8 +1,8 @@
-import { getLogger, Logger } from "@log4js2/core";
-import { BacktrackingSolver } from "./backtracking-solver";
-import { Cell } from "./cell";
-import { SingleSolver } from "./single-solver";
-import { Sudoku } from "./sudoku";
+import { getLogger, Logger } from '@log4js2/core';
+import { BacktrackingSolver } from './backtracking-solver';
+import { Cell } from './cell';
+import { SingleSolver } from './single-solver';
+import { Sudoku } from './sudoku';
 
 type Optional<T> = T | null;
 
@@ -23,11 +23,20 @@ const MAX_TRIES = 100;
 
 export class BacktrackingGenerator {
 
-    private readonly log: Logger = getLogger("BacktrackingGenerator");
+    private readonly log: Logger = getLogger('BacktrackingGenerator');
     private readonly solver: BacktrackingSolver = new BacktrackingSolver();
     private readonly singleSolver: SingleSolver = new SingleSolver();
     private numTries = 0;
     private indices: number[] = [];
+
+    private static findFirstUnfilledIndex(sudoku: Sudoku, indices: number[]): number {
+        const empty = indices.find(pos => sudoku.getCell(pos)
+            .isEmpty());
+        if (empty === undefined) {
+            throw new Error('no unused index');
+        }
+        return empty;
+    }
 
     generatePuzzle(): Sudoku {
         const solution: Sudoku = this.generateSolution();
@@ -38,14 +47,14 @@ export class BacktrackingGenerator {
         let sudoku: Optional<Sudoku> = null;
         while (sudoku === null) {
             sudoku = this.tryGenerateSolution();
-            this.log.debug("Failed to generates solution, retrying");
+            this.log.debug('Failed to generates solution, retrying');
         }
         return sudoku;
     }
 
     createPuzzle(sudoku: Sudoku): Sudoku {
         if (!sudoku.isSolved()) {
-            throw new Error("Sudoku is unsolved");
+            throw new Error('Sudoku is unsolved');
         }
         const puzzle = new Sudoku(sudoku);
         for (const index of newShuffledIndices()) {
@@ -78,7 +87,7 @@ export class BacktrackingGenerator {
     }
 
     private tryCandidate(sudoku: Sudoku, index: number, candidate: number): Optional<Sudoku> {
-        this.log.debug("grid[{}] = {}, {}", index, candidate, sudoku.asString());
+        this.log.debug('grid[{}] = {}, {}', index, candidate, sudoku.asString());
         const nextSudoku = new Sudoku(sudoku);
         nextSudoku.setCell(index, candidate);
         this.singleSolver.setSingles(nextSudoku);
@@ -101,14 +110,5 @@ export class BacktrackingGenerator {
 
     hasUniqueSolution(sudoku: Sudoku): boolean {
         return this.solver.solve(sudoku).length === 1;
-    }
-
-    private static findFirstUnfilledIndex(sudoku: Sudoku, indices: number[]): number {
-        const empty = indices.find(pos => sudoku.getCell(pos)
-            .isEmpty());
-        if (empty === undefined) {
-            throw new Error("no unused index");
-        }
-        return empty;
     }
 }

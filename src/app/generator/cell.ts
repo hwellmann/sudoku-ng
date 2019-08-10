@@ -1,4 +1,4 @@
-import BitSet from "fast-bitset";
+import BitSet from 'fast-bitset';
 
 export const DIGITS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 export const NUM_DIGITS = DIGITS.length;
@@ -6,18 +6,18 @@ export const NUM_DIGITS = DIGITS.length;
 export class Cell {
 
     readonly index: number = 0;
-    private _value = 0;
+    private digit = 0;
     solution = 0;
     given = false;
     readonly candidates: BitSet = new BitSet(NUM_DIGITS + 1);
 
     constructor(arg: number | Cell) {
-        if (typeof arg === "number") {
+        if (typeof arg === 'number') {
             this.index = arg;
             DIGITS.forEach((d) => this.candidates.set(d));
         } else if (arg instanceof Cell) {
             this.index = arg.index;
-            this._value = arg._value;
+            this.digit = arg.digit;
             this.solution = arg.solution;
             this.given = arg.given;
             this.candidates = arg.candidates.clone();
@@ -33,20 +33,20 @@ export class Cell {
     }
 
     set value(value: number) {
-        this._value = value;
+        this.digit = value;
         this.candidates.clear();
     }
 
     get value(): number {
-        return this._value;
+        return this.digit;
     }
 
     isFilled(): boolean {
-        return this._value !== 0;
+        return this.digit !== 0;
     }
 
     isEmpty(): boolean {
-        return this._value === 0;
+        return this.digit === 0;
     }
 
     isCandidate(digit: number): boolean {
@@ -62,9 +62,9 @@ export class Cell {
     }
 
     asString(): string {
-        if (this._value === 0) {
-            return ".";
+        if (this.digit === 0) {
+            return '.';
         }
-        return this._value.toString();
+        return this.digit.toString();
     }
 }

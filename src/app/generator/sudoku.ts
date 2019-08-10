@@ -1,4 +1,4 @@
-import { Cell, DIGITS, NUM_DIGITS } from "app/generator/cell";
+import { Cell, DIGITS, NUM_DIGITS } from 'app/generator/cell';
 
 export const NUM_CELLS = NUM_DIGITS * NUM_DIGITS;
 
@@ -66,17 +66,7 @@ export function buddies(index: number): number[] {
     return BUDDIES[index];
 }
 
-function initBuddies(): void {
-    for (let pos = 0; pos < NUM_CELLS; pos++) {
-        BUDDIES.push(ROWS[Sudoku.getRow(pos)]
-            .concat(COLS[Sudoku.getColumn(pos)])
-            .concat(BLOCKS[Sudoku.getBlock(pos)]));
-    }
-}
-
 export class Sudoku {
-    readonly cells: Cell[] = [];
-    private numSolved = 0;
 
     constructor(other?: Sudoku) {
         if (other === undefined) {
@@ -88,20 +78,56 @@ export class Sudoku {
             this.numSolved = other.numSolved;
         }
     }
+    readonly cells: Cell[] = [];
+    private numSolved = 0;
+
+    static getRow(index: number): number {
+        return Math.floor(index / NUM_DIGITS);
+    }
+
+    static getColumn(index: number): number {
+        return index % NUM_DIGITS;
+    }
+
+    static getBlock(index: number): number {
+        return BLOCK_FROM_INDEX[index];
+    }
+
+    static fromString(s: string): Sudoku {
+        if (s.length !== NUM_CELLS) {
+            throw new Error(`length must be ${NUM_CELLS}`);
+        }
+        const sudoku = new Sudoku();
+        for (let pos = 0; pos < NUM_CELLS; pos++) {
+            const value = Sudoku.extractValue(s, pos);
+            if (value > 0) {
+                sudoku.setCell(pos, value);
+            }
+        }
+        return sudoku;
+    }
+
+    private static extractValue(s: string, pos: number): number {
+        const c = s.charAt(pos);
+        if (c === '.') {
+            return 0;
+        }
+        return Number(c);
+    }
 
     asString(): string {
         return this.cells.map(cell => cell.asString())
-            .join("");
+            .join('');
     }
 
     setCell(index: number, value: number): void {
         const cell: Cell = this.cells[index];
         if (cell.isFilled()) {
-            throw new Error("cell is already filled");
+            throw new Error('cell is already filled');
         }
 
         if (!cell.isCandidate(value)) {
-            throw new Error("not a valid candidate");
+            throw new Error('not a valid candidate');
         }
         cell.value = value;
         this.numSolved++;
@@ -117,7 +143,7 @@ export class Sudoku {
     clearCell(index: number): void {
         const cell: Cell = this.cells[index];
         if (!cell.isFilled()) {
-            throw new Error("Cell is not filled");
+            throw new Error('Cell is not filled');
         }
         cell.clear();
         this.numSolved--;
@@ -152,39 +178,13 @@ export class Sudoku {
     isUnsolvable(): boolean {
         return this.cells.some(cell => cell.isUnsatisfiable());
     }
+}
 
-    static getRow(index: number): number {
-        return Math.floor(index / NUM_DIGITS);
-    }
-
-    static getColumn(index: number): number {
-        return index % NUM_DIGITS;
-    }
-
-    static getBlock(index: number): number {
-        return BLOCK_FROM_INDEX[index];
-    }
-
-    static fromString(s: string): Sudoku {
-        if (s.length !== NUM_CELLS) {
-            throw new Error(`length must be ${NUM_CELLS}`);
-        }
-        const sudoku = new Sudoku();
-        for (let pos = 0; pos < NUM_CELLS; pos++) {
-            const value = Sudoku.extractValue(s, pos);
-            if (value > 0) {
-                sudoku.setCell(pos, value);
-            }
-        }
-        return sudoku;
-    }
-
-    private static extractValue(s: string, pos: number): number {
-        const c = s.charAt(pos);
-        if (c === ".") {
-            return 0;
-        }
-        return Number(c);
+function initBuddies(): void {
+    for (let pos = 0; pos < NUM_CELLS; pos++) {
+        BUDDIES.push(ROWS[Sudoku.getRow(pos)]
+            .concat(COLS[Sudoku.getColumn(pos)])
+            .concat(BLOCKS[Sudoku.getBlock(pos)]));
     }
 }
 

@@ -1,11 +1,11 @@
-import { NUM_CELLS, Sudoku } from "./sudoku";
+import { NUM_CELLS, Sudoku } from './sudoku';
 
-describe("Sudoku", () => {
+describe('Sudoku', () => {
 
-    test("should be empty", () => {
+    test('should be empty', () => {
         const sudoku = new Sudoku();
         expect(sudoku.asString())
-            .toEqual(".................................................................................");
+            .toEqual('.................................................................................');
         expect(sudoku.isSolved())
             .toBeFalsy();
         expect(sudoku.isUnsolvable())
@@ -17,14 +17,14 @@ describe("Sudoku", () => {
         }
     });
 
-    test("should get row", () => {
+    test('should get row', () => {
         expect(Sudoku.getRow(15))
             .toEqual(1);
     });
 
-    test("should read puzzle from string", () => {
+    test('should read puzzle from string', () => {
         const sudoku =
-            Sudoku.fromString("......8..6.83.75.1..9.6.2.38.2..69.47...31.2.5...491.79.36..4.84..9.3.5.2..714.69");
+            Sudoku.fromString('......8..6.83.75.1..9.6.2.38.2..69.47...31.2.5...491.79.36..4.84..9.3.5.2..714.69');
         expect(sudoku.isSolved())
             .toBeFalsy();
         expect(sudoku.isUnsolvable())

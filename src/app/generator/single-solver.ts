@@ -1,11 +1,26 @@
-import { getLogger, Logger } from "@log4js2/core";
-import { Cell, DIGITS } from "./cell";
-import { ALL_UNITS, Sudoku } from "./sudoku";
+import { getLogger, Logger } from '@log4js2/core';
+import { Cell, DIGITS } from './cell';
+import { ALL_UNITS, Sudoku } from './sudoku';
 
 const INVALID = -1;
 
 export class SingleSolver {
-    private readonly log: Logger = getLogger("SingleSolver");
+    private readonly log: Logger = getLogger('SingleSolver');
+
+    private static findHiddenSingle(digit: number, indices: number[], sudoku: Sudoku): number {
+        let hiddenIndex = INVALID;
+        for (const index of indices) {
+            const cell: Cell = sudoku.getCell(index);
+            if (cell.isCandidate(digit)) {
+                if (hiddenIndex === INVALID) {
+                    hiddenIndex = index;
+                } else {
+                    return INVALID;
+                }
+            }
+        }
+        return hiddenIndex;
+    }
 
     setSingles(sudoku: Sudoku): void {
         let nakedSingles = true;
@@ -23,7 +38,7 @@ export class SingleSolver {
             if (candidates.getCardinality() === 1) {
                 const candidate = candidates.nextSetBit(0);
                 sudoku.setCell(cell.index, candidate);
-                this.log.debug("naked single {} at {}", candidate, cell.index);
+                this.log.debug('naked single {} at {}', candidate, cell.index);
                 found = true;
             }
         }
@@ -37,26 +52,11 @@ export class SingleSolver {
                 const hiddenIndex = SingleSolver.findHiddenSingle(digit, indices, sudoku);
                 if (hiddenIndex !== INVALID) {
                     sudoku.setCell(hiddenIndex, digit);
-                    this.log.debug("hidden single {} at {}", digit, hiddenIndex);
+                    this.log.debug('hidden single {} at {}', digit, hiddenIndex);
                     found = true;
                 }
             }
         }
         return found;
-    }
-
-    private static findHiddenSingle(digit: number, indices: number[], sudoku: Sudoku): number {
-        let hiddenIndex = INVALID;
-        for (const index of indices) {
-            const cell: Cell = sudoku.getCell(index);
-            if (cell.isCandidate(digit)) {
-                if (hiddenIndex === INVALID) {
-                    hiddenIndex = index;
-                } else {
-                    return INVALID;
-                }
-            }
-        }
-        return hiddenIndex;
     }
 }
