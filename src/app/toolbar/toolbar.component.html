@@ -1,0 +1,9 @@
+<button mat-icon-button (click)="app.sidenav.open()" aria-label="menu">
+  <mat-icon>menu</mat-icon>
+</button>
+<h1>Sudoku</h1>
+<ng-template #favicon>
+  <button mat-icon-button (click)="app.login();" matTooltip="{{ 'login' }}">
+    <img src="angular-sudoku.svg" alt="{{ 'login' }}" />
+  </button>
+</ng-template>
