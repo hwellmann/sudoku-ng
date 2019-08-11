@@ -7,6 +7,7 @@ import { BacktrackingGenerator } from './generator/backtracking-generator';
 import { Cell, NUM_DIGITS } from './generator/cell';
 import { DigitApp, DigitCssClass } from './digit/digit.component';
 import { CandidatesApp } from './candidates/candidates.component';
+import { BacktrackingSolver } from './generator/backtracking-solver';
 
 @Injectable()
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
@@ -14,6 +15,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     sudoku: Sudoku = new Sudoku();
 
     private generator: BacktrackingGenerator = new BacktrackingGenerator();
+    private solver = new BacktrackingSolver();
 
     private readonly log: Logger = getLogger('GameController');
 
@@ -23,8 +25,13 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
 
 
     newGame(): void {
-        this.log.info('new game');
         this.sudoku = this.generator.generatePuzzle();
+        this.log.info('new game: {} ', this.sudoku.asString());
+        const game = Sudoku.fromString(this.sudoku.asString());
+        const solutions = this.solver.solve(game);
+        if (solutions.length > 1) {
+            this.log.error('more than one solution');
+        }
     }
 
     ownGame(): void {

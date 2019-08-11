@@ -42,9 +42,7 @@ export class BacktrackingSolver {
             this.singleSolver.setSingles(nextSudoku);
             if (nextSudoku.isSolved()) {
                 this.solutions.add(nextSudoku.asString());
-                return;
-            }
-            if (!nextSudoku.isUnsolvable()) {
+            } else if (!nextSudoku.isUnsolvable()) {
                 this.solveRecursively(nextSudoku);
                 if (this.solutions.size > 1) {
                     return;
