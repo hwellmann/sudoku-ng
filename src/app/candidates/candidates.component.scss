@@ -1,0 +1,7 @@
+@import "../variables.scss";
+
+table.candidate {
+    width: $max-cell-size;
+    height: $max-cell-size;
+    line-height: 80%;
+}

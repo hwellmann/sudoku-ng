@@ -3,6 +3,7 @@ import { Sudoku } from 'app/generator/sudoku';
 import { Cell } from 'app/generator/cell';
 
 export interface FieldCssClass {
+    field: boolean;
     initialClue: boolean;
     selectedPosition: boolean;
     lastSolvedField: boolean;

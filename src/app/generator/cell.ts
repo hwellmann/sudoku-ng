@@ -53,6 +53,10 @@ export class Cell {
         return this.candidates.get(digit);
     }
 
+    addCandidate(digit: number): void {
+        this.candidates.set(digit);
+    }
+
     removeCandidate(digit: number): void {
         this.candidates.unset(digit);
     }

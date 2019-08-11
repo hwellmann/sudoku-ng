@@ -9,6 +9,7 @@ export abstract class DigitApp {
     abstract readonly isUserDefined: boolean;
 
     abstract digitClicked(value: number): void;
+    abstract candidatesClicked(): void;
     abstract digitCssClass(value: number): DigitCssClass;
 }
 

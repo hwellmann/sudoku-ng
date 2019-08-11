@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { MatSidenavModule, MatToolbarModule, MatIconModule, MatButton, MatButtonModule, MatTooltipModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
+import { CandidatesComponent, CandidatesApp } from './candidates/candidates.component';
 import { GridComponent, GridApp } from './grid/grid.component';
 import { SidenavComponent, SidenavApp } from './sidenav/sidenav.component';
 import { ToolbarComponent, ToolbarApp } from './toolbar/toolbar.component';
@@ -13,6 +14,7 @@ import { DigitComponent, DigitApp } from './digit/digit.component';
 @NgModule({
     declarations: [
         AppComponent,
+        CandidatesComponent,
         DigitComponent,
         GridComponent,
         SidenavComponent,
@@ -29,6 +31,7 @@ import { DigitComponent, DigitApp } from './digit/digit.component';
     ],
     providers: [
         GameController,
+        { provide: CandidatesApp, useExisting: GameController },
         { provide: SidenavApp, useExisting: GameController },
         { provide: GridApp, useExisting: GameController },
         { provide: ToolbarApp, useExisting: GameController },

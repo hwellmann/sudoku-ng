@@ -16,7 +16,7 @@ table {
   border-#{$pos}-style: solid;
 }
 
-tr {
+tr.field {
   @include faint-border(top);
 
   &.row_1,
@@ -30,8 +30,9 @@ tr {
   }
 }
 
-td {
+td.field {
   @include faint-border(left);
+  text-align: center;
 
   &.col_1,
   &.col_4,
@@ -44,7 +45,7 @@ td {
   }
 }
 
-td>button {
+td>button.field {
   /* unset Material Design values */
   min-width: unset;
   padding: unset;
@@ -80,7 +81,7 @@ td>button {
 }
 
 @media screen and (min-width: 500px) {
-  td>button {
+  td>button.field {
     width: $max-cell-size;
     height: $max-cell-size;
     line-height: $max-cell-size / 2; // otherwise digits are too far below

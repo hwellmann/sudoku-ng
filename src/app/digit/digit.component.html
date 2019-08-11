@@ -5,5 +5,5 @@
 <div>
   <button mat-icon-button [ngClass]="app.digitCssClass(digit)" [disabled]="app.digitCssClass(digit).exhaustedDigit" class="digit"
     *ngFor="let digit of [6, 7, 8, 9]" (click)="app.digitClicked(digit)">{{ digit }}</button>
-  <button mat-icon-button [ngClass]="app.digitCssClass(0)" class="digit" *ngIf="app.isUserDefined" (click)="app.digitClicked(0)">X</button>
+  <button mat-icon-button [ngClass]="app.digitCssClass(0)" class="digit" (click)="app.candidatesClicked()">C</button>
 </div>
