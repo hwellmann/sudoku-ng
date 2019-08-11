@@ -45,7 +45,6 @@ describe('BacktrackingSolver', () => {
         const solutions = solver.solve(sudoku);
         expect(solutions.length)
             .toBe(2);
-
     });
 
     test('round trip', () => {
