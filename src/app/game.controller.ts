@@ -34,7 +34,14 @@ export class GameController implements SidenavApp, GridApp, DigitApp {
     }
 
     fieldClicked(row: number, col: number): void {
-        console.log(`clicked row ${row}, column ${col}`);
+        this.log.info(`clicked row ${row}, column ${col}`);
+        const cell: Cell = this.getField(row, col);
+        if (this.selectedDigit === undefined) {
+            return;
+        }
+        if (cell.isCandidate(this.selectedDigit) && cell.solution === this.selectedDigit) {
+            this.sudoku.setCell(cell.index, this.selectedDigit);
+        }
     }
 
     getField(row: number, col: number): Cell {
@@ -44,6 +51,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp {
 
     digitClicked(value: number): void {
         this.selectedDigit = value;
+        this.log.info('selected digit {}', value);
     }
 
     digitCssClass(value: number): DigitCssClass {

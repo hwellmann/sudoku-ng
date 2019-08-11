@@ -15,11 +15,6 @@ export abstract class GridApp {
 })
 export class GridComponent {
 
-    constructor(public app: GridApp) { }
-
-    fieldClicked(row: number, col: number): void {
-        console.log(`clicked row ${row}, column ${col}`);
-    }
-
+     constructor(public app: GridApp) { }
 
 }
