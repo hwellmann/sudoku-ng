@@ -8,10 +8,12 @@ import { GridComponent, GridApp } from './grid/grid.component';
 import { SidenavComponent, SidenavApp } from './sidenav/sidenav.component';
 import { ToolbarComponent, ToolbarApp } from './toolbar/toolbar.component';
 import { GameController } from './game.controller';
+import { DigitComponent, DigitApp } from './digit/digit.component';
 
 @NgModule({
     declarations: [
         AppComponent,
+        DigitComponent,
         GridComponent,
         SidenavComponent,
         ToolbarComponent
@@ -29,7 +31,8 @@ import { GameController } from './game.controller';
         GameController,
         { provide: SidenavApp, useExisting: GameController },
         { provide: GridApp, useExisting: GameController },
-        { provide: ToolbarApp, useExisting: GameController }
+        { provide: ToolbarApp, useExisting: GameController },
+        { provide: DigitApp, useExisting: GameController }
     ],
     bootstrap: [AppComponent]
 })

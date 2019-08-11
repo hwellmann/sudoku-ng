@@ -1,2 +1,91 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+
+@mixin my-components-theme($theme) {
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+    $warn: map-get($theme, warn);
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+  
+    .mat-simple-snackbar {
+      justify-content: center !important;
+    }
+  
+    .warning {
+      white-space: pre-line;
+      text-align: center;
+      background-color: mat-color($warn);
+    }
+  
+    .solved {
+      white-space: pre-line;
+      text-align: center;
+      background-color: mat-color($accent);
+    }
+  
+    /* for map keys, see https://github.com/angular/material2/blob/master/src/lib/core/theming/_palette.scss */
+    tr {
+      border-top-color: mat-color($foreground, disabled);
+    }
+  
+    tr.row_9 {
+      border-bottom-color: mat-color($foreground, disabled);
+    }
+  
+    td {
+      border-left-color: mat-color($foreground, disabled);
+    }
+  
+    td.col_9 {
+      border-right-color: mat-color($foreground, disabled);
+    }
+  
+    td>button {
+      color: mat-color($foreground, text) !important;
+    }
+  
+    td>button:hover:enabled,
+    button.digit:hover:enabled {
+      background-color: mat-color($background, focused-button);
+    }
+  
+    td>button.initialClue {
+      color: mat-color($foreground, secondary-text) !important;
+    }
+  
+    .selectedPosition {
+      border-color: mat-color($primary) !important;
+    }
+  
+    .selectedDigit {
+      background-color: mix(mat-color($background, background), mat-color($primary, lighter)) !important;
+    }
+  
+    .lastSolvedField {
+      background-color: mix(mat-color($background, background), mat-color($primary)) !important;
+    }
+  
+    .onlyOnePossibleDigit {
+      background-color: mix(mat-color($background, background), mat-color($accent, lighter)) !important;
+    }
+  
+    .groupForLastSolvedField {
+      background-color: mat-color($background, status-bar);
+    }
+  }
+  
+  // default theme
+  $candy-app-primary: mat-palette($mat-indigo);
+  $candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+  $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
+  
+  @include angular-material-theme($candy-app-theme);
+  @include my-components-theme($candy-app-theme);
+  
+  

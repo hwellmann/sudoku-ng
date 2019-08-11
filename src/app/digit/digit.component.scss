@@ -1,0 +1,23 @@
+@import "../variables.scss";
+
+$circle-to-cell: 4/3;
+$circle-size: $circle-to-cell * $cell-size;
+$max-circle-size: $circle-to-cell * $max-cell-size;
+
+button.digit {
+  margin: 5px 10px;
+  min-width: unset;
+  padding: unset;
+  font-family: "Swanky and Moo Moo", Roboto, "Helvetica Neue", sans-serif;
+  width: $circle-size;
+  height: $circle-size;
+  font-size: $swanky-font-size;
+}
+
+@media screen and (min-width: 500px) {
+  button.digit {
+    width: $max-circle-size;
+    height: $max-circle-size;
+    font-size: $max-swanky-font-size;
+  }
+}

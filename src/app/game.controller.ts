@@ -5,14 +5,18 @@ import { Sudoku } from './generator/sudoku';
 import { Logger, getLogger } from '@log4js2/core';
 import { BacktrackingGenerator } from './generator/backtracking-generator';
 import { Cell, NUM_DIGITS } from './generator/cell';
+import { DigitApp, DigitCssClass } from './digit/digit.component';
 
 @Injectable()
-export class GameController implements SidenavApp, GridApp {
+export class GameController implements SidenavApp, GridApp, DigitApp {
+    isUserDefined: boolean;
     sudoku: Sudoku = new Sudoku();
 
     private generator: BacktrackingGenerator = new BacktrackingGenerator();
 
     private readonly log: Logger = getLogger('BacktrackingGenerator');
+
+    private selectedDigit: number;
 
 
     newGame(): void {
@@ -38,5 +42,15 @@ export class GameController implements SidenavApp, GridApp {
         return this.sudoku.getCell(index);
     }
 
+    digitClicked(value: number): void {
+        this.selectedDigit = value;
+    }
+
+    digitCssClass(value: number): DigitCssClass {
+        return {
+            exhaustedDigit: this.sudoku.isExhausted(value),
+            selectedDigit: value === this.selectedDigit
+        };
+    }
 
 }

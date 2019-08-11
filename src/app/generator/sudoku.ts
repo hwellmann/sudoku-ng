@@ -178,6 +178,13 @@ export class Sudoku {
     isUnsolvable(): boolean {
         return this.cells.some(cell => cell.isUnsatisfiable());
     }
+
+    isExhausted(digit: number): boolean {
+        const numSetDigits = this.cells
+            .filter(cell => cell.value === digit)
+            .length;
+        return numSetDigits === NUM_DIGITS;
+    }
 }
 
 function initBuddies(): void {
