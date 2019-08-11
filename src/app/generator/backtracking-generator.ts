@@ -65,7 +65,11 @@ export class BacktrackingGenerator {
             }
         }
         for (const solutionCell of sudoku.cells) {
-            puzzle.getCell(solutionCell.index).solution = solutionCell.value;
+            const cell = puzzle.getCell(solutionCell.index);
+            cell.solution = solutionCell.value;
+            if (cell.value) {
+                cell.given = true;
+            }
         }
         return puzzle;
     }

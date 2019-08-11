@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SidenavApp } from './sidenav/sidenav.component';
-import { GridApp } from './grid/grid.component';
+import { GridApp, FieldCssClass } from './grid/grid.component';
 import { Sudoku } from './generator/sudoku';
 import { Logger, getLogger } from '@log4js2/core';
 import { BacktrackingGenerator } from './generator/backtracking-generator';
@@ -17,6 +17,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp {
     private readonly log: Logger = getLogger('BacktrackingGenerator');
 
     private selectedDigit: number;
+    private selectedCell: Cell;
 
 
     newGame(): void {
@@ -36,6 +37,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp {
     fieldClicked(row: number, col: number): void {
         this.log.info(`clicked row ${row}, column ${col}`);
         const cell: Cell = this.getField(row, col);
+        this.selectedCell = cell;
         if (this.selectedDigit === undefined) {
             return;
         }
@@ -61,4 +63,15 @@ export class GameController implements SidenavApp, GridApp, DigitApp {
         };
     }
 
+    fieldCssClass(row: number, col: number): FieldCssClass {
+        const cell = this.getField(row, col);
+        return {
+            initialClue: cell.given,
+            groupForLastSolvedField: this.selectedDigit && cell.isCandidate(this.selectedDigit),
+            lastSolvedField: false,
+            onlyOnePossibleDigit: cell.candidates.getCardinality() === 1,
+            selectedDigit: this.selectedDigit === cell.value,
+            selectedPosition: this.selectedCell && this.selectedCell.index === cell.index
+        };
+    }
 }

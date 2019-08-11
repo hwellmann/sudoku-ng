@@ -2,7 +2,7 @@
     <tr *ngFor="let row of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="row_{{row}}">
         <td *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="col_{{col}}">
             <ng-container *ngIf="app.getField(row, col) as cell">
-                <button mat-button (click)="app.fieldClicked(row, col)">
+                <button mat-button (click)="app.fieldClicked(row, col)" [ngClass]="app.fieldCssClass(row, col)">
                     {{ cell.value || '&nbsp;' }}
                 </button>
             </ng-container>
