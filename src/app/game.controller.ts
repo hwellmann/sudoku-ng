@@ -109,6 +109,9 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         if (this.selectedCell && this.selectedCell.index === cell.index) {
             classes.push('selectedPosition');
         }
+        if (this.selectedDigit && cell.isCandidate(this.selectedDigit)) {
+            classes.push('groupForLastSolvedField');
+        }
         return classes.join(' ');
     }
 
