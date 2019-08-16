@@ -62,6 +62,10 @@
     .selectedDigit {
       background-color: mix(mat-color($background, background), mat-color($primary, lighter)) !important;
     }
+
+    .candidateDigit {
+      font-size: 12px;  
+    }
   
     .lastSolvedField {
       background-color: mix(mat-color($background, background), mat-color($primary)) !important;

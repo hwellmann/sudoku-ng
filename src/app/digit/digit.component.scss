@@ -20,4 +20,8 @@ button.digit {
     height: $max-circle-size;
     font-size: $max-swanky-font-size;
   }
+
+  button.digit.candidateDigit {
+    font-size: $max-swanky-font-size / 2;
+  }
 }

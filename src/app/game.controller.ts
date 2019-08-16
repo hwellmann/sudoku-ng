@@ -79,7 +79,8 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     digitCssClass(value: number): DigitCssClass {
         return {
             exhaustedDigit: this.sudoku.isExhausted(value),
-            selectedDigit: value === this.selectedDigit
+            selectedDigit: value === this.selectedDigit,
+            candidateDigit: this.editCandidates
         };
     }
 

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 export interface DigitCssClass {
     selectedDigit: boolean;
     exhaustedDigit: boolean;
+    candidateDigit: boolean;
 }
 
 export abstract class DigitApp {

@@ -23,7 +23,7 @@ export class ToolbarComponent {
 
     constructor(public app: ToolbarApp) { }
 
-    openSidenav(): void  {
+    openSidenav(): void {
         this.sidenavOpened.emit();
     }
 }
