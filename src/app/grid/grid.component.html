@@ -1,6 +1,6 @@
 <table>
     <tr *ngFor="let row of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="field row_{{row}}">
-        <td *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="field col_{{col}}">
+        <td *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="field col_{{col}} {{app.fieldCssClasses(row, col)}}">
             <ng-container *ngIf="app.getField(row, col) as cell">
                 <button mat-button *ngIf="cell.isFilled()" (click)="app.fieldClicked(row, col)" [ngClass]="app.fieldCssClass(row, col)">
                     {{ cell.value || '&nbsp;' }}

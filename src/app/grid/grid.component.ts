@@ -17,6 +17,7 @@ export abstract class GridApp {
     abstract fieldClicked(row: number, col: number): void;
     abstract getField(row: number, col: number): Cell;
     abstract fieldCssClass(row: number, col: number): FieldCssClass;
+    abstract fieldCssClasses(row: number, col: number): string;
 }
 
 @Component({

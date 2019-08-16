@@ -97,6 +97,21 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         };
     }
 
+    fieldCssClasses(row: number, col: number): string {
+        const cell = this.getField(row, col);
+        const classes: string[] = [];
+        if (cell.candidates.getCardinality() === 1) {
+            classes.push('onlyOnePossibleDigit');
+        }
+        if (this.selectedDigit === cell.value) {
+            classes.push('selectedDigit');
+        }
+        if (this.selectedCell && this.selectedCell.index === cell.index) {
+            classes.push('selectedPosition');
+        }
+        return classes.join(' ');
+    }
+
     candidateClicked(cell: Cell, candidate: number): void {
         if (cell.isFilled()) {
             return;
