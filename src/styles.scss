@@ -59,10 +59,6 @@
       color: mat-color($foreground, secondary-text) !important;
     }
   
-    .selectedPosition {
-      border-color: mat-color($primary) !important;
-    }
-  
     .selectedDigit {
       background-color: mix(mat-color($background, background), mat-color($primary, lighter)) !important;
     }
