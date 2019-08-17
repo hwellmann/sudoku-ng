@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 
 export abstract class ToolbarApp {
     abstract readonly sidenav: MatSidenav;
