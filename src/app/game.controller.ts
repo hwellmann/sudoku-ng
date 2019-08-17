@@ -10,6 +10,7 @@ import { CandidatesApp } from './candidates/candidates.component';
 import { fromWorker } from 'observable-webworker';
 import { of, Subject, Subscription } from 'rxjs';
 import { AsyncGenerator } from './generator/async-generator';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Injectable()
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
@@ -24,6 +25,9 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     private selectedCell: Cell;
     private editCandidates = false;
 
+    constructor(public snackBar: MatSnackBar) {
+    }
+
     newGame(): void {
         this.log.info('new game');
         this.asyncGenerator.generateSolvedSudoku('medium');
@@ -31,6 +35,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
 
     ownGame(): void {
         this.log.info('own game');
+        this.openSnackBar('warning', 'Not yet implemented.');
     }
 
     onDestroy(): void {
@@ -39,6 +44,16 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
 
     about(): void {
         this.log.info('about game');
+        this.openSnackBar('solved', 'This is just a silly notice.');
+    }
+
+    private openSnackBar(cssClass: string, message: string) {
+        const config = new MatSnackBarConfig();
+        config.verticalPosition = 'bottom';
+        config.horizontalPosition = 'center';
+        config.duration = 3000;
+        config.panelClass = [cssClass];
+        this.snackBar.open(message, undefined, config);
     }
 
     fieldClicked(row: number, col: number): void {
