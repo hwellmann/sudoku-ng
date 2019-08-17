@@ -35,4 +35,21 @@ describe('Sudoku', () => {
             .getIndices())
             .toEqual([1, 3]);
     });
+
+    test('should read from solution', () => {
+        const solvedSudoku = {
+            puzzle: '7....3.....9....3..5.7...9....2..4...7....9.6....8.....268...5.1....9...5....7.84',
+            solution: '761593842249168537358742691935276418874315926612984375426831759187459263593627184'
+        };
+        const sudoku = Sudoku.fromSolvedSudoku(solvedSudoku);
+        expect(sudoku.getCell(1).isCandidate(6))
+            .toBeTruthy();
+        expect(sudoku.getCell(1).solution)
+            .toEqual(6);
+        expect(sudoku.asString())
+            .toEqual(solvedSudoku.puzzle);
+        expect(sudoku.solutionAsString)
+            .toEqual(solvedSudoku.solution);
+    });
+
 });

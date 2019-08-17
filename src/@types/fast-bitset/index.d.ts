@@ -11,6 +11,7 @@ declare module "fast-bitset" {
     getIndices(): number[]
     getCardinality(): number;
     nextSetBit(from: number): number;
+    toString(): string;
   }
 
   export default BitSet;

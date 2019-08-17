@@ -66,6 +66,12 @@ export function buddies(index: number): number[] {
     return BUDDIES[index];
 }
 
+
+export interface SolvedSudoku {
+    puzzle: string;
+    solution: string;
+}
+
 export class Sudoku {
 
     constructor(other?: Sudoku) {
@@ -102,7 +108,17 @@ export class Sudoku {
             const value = Sudoku.extractValue(s, pos);
             if (value > 0) {
                 sudoku.setCell(pos, value);
+                sudoku.cells[pos].given = true;
             }
+        }
+        return sudoku;
+    }
+
+    static fromSolvedSudoku(solved: SolvedSudoku): Sudoku {
+        const sudoku = Sudoku.fromString(solved.puzzle);
+        for (let pos = 0; pos < NUM_CELLS; pos++) {
+            const solution = Number(solved.solution.charAt(pos));
+            sudoku.cells[pos].solution = solution;
         }
         return sudoku;
     }
@@ -118,6 +134,18 @@ export class Sudoku {
     asString(): string {
         return this.cells.map(cell => cell.asString())
             .join('');
+    }
+
+    get solutionAsString(): string {
+        return this.cells.map(cell => cell.solution)
+            .join('');
+    }
+
+    asSolvedSudoku(): SolvedSudoku {
+        return {
+            puzzle: this.asString(),
+            solution: this.solutionAsString
+        };
     }
 
     setCell(index: number, value: number): void {
