@@ -2,8 +2,8 @@ import { DoWork, ObservableWorker } from 'observable-webworker';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger, getLogger } from '@log4js2/core';
-import { BacktrackingGenerator } from './generator/backtracking-generator';
-import { Sudoku, SolvedSudoku } from './generator/sudoku';
+import { BacktrackingGenerator } from './backtracking-generator';
+import { Sudoku, SolvedSudoku } from './sudoku';
 
 import { configure, LogLevel } from '@log4js2/core';
 

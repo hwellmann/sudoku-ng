@@ -9,15 +9,14 @@ import { DigitApp, DigitCssClass } from './digit/digit.component';
 import { CandidatesApp } from './candidates/candidates.component';
 import { fromWorker } from 'observable-webworker';
 import { of, Subject, Subscription } from 'rxjs';
-
-const input$ = of('Hello from main thread');
+import { AsyncGenerator } from './generator/async-generator';
 
 @Injectable()
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
     isUserDefined: boolean;
     sudoku: Sudoku = new Sudoku();
 
-    private generator: BacktrackingGenerator = new BacktrackingGenerator();
+    private asyncGenerator: AsyncGenerator = new AsyncGenerator(sudoku => this.sudoku = sudoku);
 
     private readonly log: Logger = getLogger('GameController');
 
@@ -25,34 +24,17 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     private selectedCell: Cell;
     private editCandidates = false;
 
-    private clickStream = new Subject<string>();
-    private observable = this.clickStream.asObservable();
-    private subscription: Subscription;
-
-    constructor() {
-        this.subscription = fromWorker<string, SolvedSudoku>(this.createWorker, this.observable)
-            .subscribe(message => this.handleWorkerResult(message));
-    }
-
-    private createWorker(): Worker {
-        return new Worker('./generator.worker', { type: 'module' });
-    }
-
-    private handleWorkerResult(message: SolvedSudoku): void {
-        this.sudoku = Sudoku.fromSolvedSudoku(message);
-        this.log.info('from worker: {}', this.sudoku.asString());
-    }
-
     newGame(): void {
         this.log.info('new game');
-        this.clickStream.next('foo');
+        this.asyncGenerator.generateSolvedSudoku('medium');
     }
 
     ownGame(): void {
         this.log.info('own game');
-        this.clickStream.complete();
-        this.subscription.unsubscribe();
+    }
 
+    onDestroy(): void {
+        this.asyncGenerator.onDestroy();
     }
 
     about(): void {
@@ -71,7 +53,6 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         if (this.selectedDigit === undefined) {
             return;
         }
-        this.log.info('candidates: {}', cell.candidates.toString());
         if (cell.isCandidate(this.selectedDigit) && cell.solution === this.selectedDigit) {
             this.sudoku.setCell(cell.index, this.selectedDigit);
         }
