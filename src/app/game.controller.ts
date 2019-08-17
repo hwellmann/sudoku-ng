@@ -139,6 +139,13 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         }
     }
 
+    candidateRightClicked(cell: Cell, candidate: number): void {
+        const oldSelectedDigit = this.selectedDigit;
+        this.selectedDigit = candidate;
+        this.cellClicked(cell);
+        this.selectedDigit = oldSelectedDigit;
+    }
+
     private addOrRemoveCandidate(candidate: number, cell: Cell) {
         this.log.info('candidate {} clicked in cell {}', candidate, cell.index);
         if (cell.isCandidate(candidate)) {

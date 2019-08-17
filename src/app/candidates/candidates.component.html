@@ -2,7 +2,7 @@
     <tr *ngFor="let row of [1, 2, 3]" class="candidates">
         <td *ngFor="let col of [1, 2, 3]" class="candidate">
             <ng-container *ngIf="3*(row-1)+col as candidate">
-                <button mat-button (click)="candidateClicked(candidate)">
+                <button mat-button (click)="candidateClicked(candidate)" (contextmenu)="candidateRightClicked(candidate)">
                     {{ cell.isCandidate(candidate) ? candidate : '&nbsp;' }}
                 </button>
             </ng-container>    

@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { Sudoku } from 'app/generator/sudoku';
 import { Cell } from 'app/generator/cell';
-import { GridApp } from 'app/grid/grid.component';
 
 export abstract class CandidatesApp {
     abstract candidateClicked(cell: Cell, candidate: number): void;
+    abstract candidateRightClicked(cell: Cell, candidate: number): void;
 }
 
 
@@ -21,6 +20,11 @@ export class CandidatesComponent {
 
     candidateClicked(candidate: number): void {
         this.app.candidateClicked(this.cell, candidate);
+    }
+
+    candidateRightClicked(candidate: number): boolean {
+        this.app.candidateRightClicked(this.cell, candidate);
+        return false;
     }
 
 }
