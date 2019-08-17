@@ -1,5 +1,5 @@
 <mat-sidenav-container fullscreen>
-    <mat-sidenav #sidenav>
+    <mat-sidenav #sidenav (click)="sidenav.toggle()">
         <sudoku-sidenav></sudoku-sidenav>
     </mat-sidenav>
     <mat-sidenav-content>
