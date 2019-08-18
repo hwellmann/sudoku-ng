@@ -204,7 +204,32 @@ export class Sudoku {
     }
 
     isUnsolvable(): boolean {
+        return this.hasUnsatisfiableCells() || this.hasUnsatisfiableUnits();
+    }
+
+    private hasUnsatisfiableCells(): boolean {
         return this.cells.some(cell => cell.isUnsatisfiable());
+    }
+
+    private hasUnsatisfiableUnits(): boolean {
+        for (const indices of ALL_UNITS) {
+            for (const digit of DIGITS) {
+                if (this.hasNoCandidatesInUnit(digit, indices)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private hasNoCandidatesInUnit(digit: number, indices: number[]): boolean {
+        for (const index of indices) {
+            const cell = this.cells[index];
+            if (cell.value === digit || cell.isCandidate(digit)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     isExhausted(digit: number): boolean {

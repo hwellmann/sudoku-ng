@@ -47,6 +47,14 @@ describe('BacktrackingSolver', () => {
             .toBe(2);
     });
 
+    test('no solution', () => {
+        const sudoku = Sudoku.fromString(
+            '213.........23.1.....1..23.12....3..3...2..1....31..2..32.....1..1..2..3.....1..2');
+        const solutions = solver.solve(sudoku);
+        expect(solutions.length)
+            .toBe(0);
+    });
+
     test('round trip', () => {
         for (let i = 0; i < 10; i++) {
             const sudoku = generator.generatePuzzle();

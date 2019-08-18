@@ -1,4 +1,4 @@
-import { Injectable, OnInit, OnDestroy } from '@angular/core';
+import { Injectable, OnInit, OnDestroy, ɵPlayState } from '@angular/core';
 import { Logger, getLogger } from '@log4js2/core';
 import { SidenavApp } from './sidenav/sidenav.component';
 import { GridApp, FieldCssClass } from './grid/grid.component';
@@ -11,6 +11,13 @@ import { fromWorker } from 'observable-webworker';
 import { of, Subject, Subscription } from 'rxjs';
 import { AsyncGenerator } from './generator/async-generator';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { BacktrackingSolver } from './generator/backtracking-solver';
+
+enum State {
+    ENTER_GAME,
+    PLAY,
+    EDIT_CANDIDATES
+}
 
 @Injectable()
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
@@ -18,12 +25,13 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     sudoku: Sudoku = new Sudoku();
 
     private asyncGenerator: AsyncGenerator = new AsyncGenerator(sudoku => this.sudoku = sudoku);
+    private solver: BacktrackingSolver = new BacktrackingSolver();
 
     private readonly log: Logger = getLogger('GameController');
 
     private selectedDigit: number;
     private selectedCell: Cell;
-    private editCandidates = false;
+    private state: State = State.PLAY;
 
     constructor(public snackBar: MatSnackBar) {
     }
@@ -35,7 +43,8 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
 
     ownGame(): void {
         this.log.info('own game');
-        this.openSnackBar('warning', 'Not yet implemented.');
+        this.sudoku = new Sudoku();
+        this.state = State.ENTER_GAME;
     }
 
     onDestroy(): void {
@@ -68,8 +77,22 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         if (this.selectedDigit === undefined) {
             return;
         }
-        if (cell.isCandidate(this.selectedDigit) && cell.solution === this.selectedDigit) {
-            this.sudoku.setCell(cell.index, this.selectedDigit);
+        if (this.state === State.ENTER_GAME) {
+            if (cell.isCandidate(this.selectedDigit)) {
+                this.sudoku.setCell(cell.index, this.selectedDigit);
+            } else if (cell.value === this.selectedDigit) {
+                this.sudoku.clearCell(cell.index);
+            } else {
+                this.sudoku.clearCell(cell.index);
+                this.sudoku.setCell(cell.index, this.selectedDigit);
+            }
+        } else if (cell.isCandidate(this.selectedDigit)) {
+            if (cell.solution === this.selectedDigit) {
+                this.sudoku.setCell(cell.index, this.selectedDigit);
+            }
+            if (this.sudoku.isSolved()) {
+                this.openSnackBar('solved', 'Solved!');
+            }
         }
     }
 
@@ -79,13 +102,35 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     }
 
     candidatesClicked(): void {
-        this.editCandidates = true;
-        this.log.info('edit candidates');
+        if (this.state === State.PLAY) {
+            this.state = State.EDIT_CANDIDATES;
+            this.log.info('edit candidates');
+        } else if (this.state === State.ENTER_GAME) {
+            this.state = State.PLAY;
+            const puzzle = new Sudoku(this.sudoku);
+            const solutions = this.solver.solve(puzzle);
+            solutions.forEach(s => this.log.info(s.asString()));
+            if (solutions.length === 0) {
+                this.openSnackBar('warning', 'This Sudoku has no solution');
+            } else if (solutions.length > 1) {
+                this.openSnackBar('warning', 'This Sudoku has more than one solution');
+            }
+            const solution = solutions[0];
+            for (const solutionCell of solution.cells) {
+                const cell = this.sudoku.getCell(solutionCell.index);
+                cell.solution = solutionCell.value;
+                if (cell.value) {
+                    cell.given = true;
+                }
+            }
+        }
     }
 
     digitClicked(value: number): void {
         this.selectedDigit = value;
-        this.editCandidates = false;
+        if (this.state === State.EDIT_CANDIDATES) {
+            this.state = State.PLAY;
+        }
         this.log.info('selected digit {}', value);
     }
 
@@ -93,7 +138,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         return {
             exhaustedDigit: this.sudoku.isExhausted(value),
             selectedDigit: value === this.selectedDigit,
-            candidateDigit: this.editCandidates
+            candidateDigit: this.state === State.EDIT_CANDIDATES
         };
     }
 
@@ -102,7 +147,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         return {
             field: true,
             initialClue: cell.given,
-            groupForLastSolvedField: this.selectedDigit && cell.isCandidate(this.selectedDigit),
+            groupForLastSolvedField: this.selectedDigit && cell.isCandidate(this.selectedDigit) && this.state !== State.ENTER_GAME,
             lastSolvedField: false,
             onlyOnePossibleDigit: cell.candidates.getCardinality() === 1,
             selectedDigit: this.selectedDigit === cell.value,
@@ -122,7 +167,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         if (this.selectedCell && this.selectedCell.index === cell.index) {
             classes.push('selectedPosition');
         }
-        if (this.selectedDigit && cell.isCandidate(this.selectedDigit)) {
+        if (this.selectedDigit && this.state !== State.ENTER_GAME && cell.isCandidate(this.selectedDigit)) {
             classes.push('groupForLastSolvedField');
         }
         return classes.join(' ');
@@ -132,7 +177,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         if (cell.isFilled()) {
             return;
         }
-        if (this.editCandidates) {
+        if (this.state === State.EDIT_CANDIDATES) {
             this.addOrRemoveCandidate(candidate, cell);
         } else {
             this.cellClicked(cell);
