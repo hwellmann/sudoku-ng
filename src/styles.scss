@@ -50,7 +50,6 @@
       color: mat-color($foreground, text);
     }
   
-    td>button:hover:enabled,
     button.digit:hover:enabled {
       background-color: mat-color($background, focused-button);
     }

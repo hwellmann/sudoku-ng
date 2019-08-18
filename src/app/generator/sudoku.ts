@@ -2,6 +2,7 @@ import { Cell, DIGITS, NUM_DIGITS } from 'app/generator/cell';
 
 export const NUM_CELLS = NUM_DIGITS * NUM_DIGITS;
 
+/// All indices for every row.
 const ROWS: number[][] = [
     [0, 1, 2, 3, 4, 5, 6, 7, 8],
     [9, 10, 11, 12, 13, 14, 15, 16, 17],
@@ -40,7 +41,7 @@ const BLOCKS: number[][] = [
     [60, 61, 62, 69, 70, 71, 78, 79, 80],
 ];
 
-/// All indices for all constraints: first lines, then cols, then blocks.
+/// All indices for all units: first rows, then columns, then blocks.
 export const ALL_UNITS: number[][] = [
     ROWS[0], ROWS[1], ROWS[2], ROWS[3], ROWS[4], ROWS[5], ROWS[6], ROWS[7], ROWS[8],
     COLS[0], COLS[1], COLS[2], COLS[3], COLS[4], COLS[5], COLS[6], COLS[7], COLS[8],
@@ -74,6 +75,9 @@ export interface SolvedSudoku {
 
 export class Sudoku {
 
+    readonly cells: Cell[] = [];
+    private numSolved = 0;
+
     constructor(other?: Sudoku) {
         if (other === undefined) {
             for (let index = 0; index < NUM_CELLS; index++) {
@@ -84,8 +88,6 @@ export class Sudoku {
             this.numSolved = other.numSolved;
         }
     }
-    readonly cells: Cell[] = [];
-    private numSolved = 0;
 
     static getRow(index: number): number {
         return Math.floor(index / NUM_DIGITS);
