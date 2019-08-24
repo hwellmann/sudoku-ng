@@ -1,4 +1,5 @@
 import { Cell, DIGITS, NUM_DIGITS } from 'app/generator/cell';
+import { Position } from './position';
 
 export const NUM_CELLS = NUM_DIGITS * NUM_DIGITS;
 
@@ -99,6 +100,10 @@ export class Sudoku {
 
     static getBlock(index: number): number {
         return BLOCK_FROM_INDEX[index];
+    }
+
+    static getPosition(index: number): Position {
+        return new Position(1 + Sudoku.getRow(index), 1 + Sudoku.getColumn(index));
     }
 
     static fromString(s: string): Sudoku {

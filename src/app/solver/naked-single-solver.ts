@@ -4,6 +4,20 @@ import BitSet from 'fast-bitset';
 import { Solver } from './solver';
 import { SolutionStep } from './solution-step';
 import { StepType } from './step-type';
+import { Sudoku } from 'app/generator/sudoku';
+
+class NakedSingleSolutionStep extends SolutionStep {
+    constructor() {
+        super();
+        this.type = StepType.NAKED_SINGLE;
+    }
+
+    toString(): string {
+        const [index, candidates] = this.insertableCandidates.entries().next().value;
+        const digit = candidates.nextSetBit(0);
+        return `${this.type}: ${Sudoku.getPosition(index)}=${digit}`;
+    }
+}
 
 export class NakedSingleSolver extends Solver {
     private readonly log: Logger = getLogger('NakedSingleSolver');
@@ -29,8 +43,7 @@ export class NakedSingleSolver extends Solver {
     }
 
     private buildSolutionStep(index: number, candidate: number) {
-        const step = new SolutionStep();
-        step.type = StepType.NAKED_SINGLE;
+        const step = new NakedSingleSolutionStep();
         step.tuple.push(candidate);
         const candidates = new BitSet(NUM_DIGITS + 1);
         candidates.set(candidate);

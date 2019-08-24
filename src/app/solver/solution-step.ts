@@ -1,6 +1,7 @@
 import BitSet from 'fast-bitset';
 import { StepType } from './step-type';
-export class SolutionStep {
+
+export abstract class SolutionStep {
     type: StepType;
     unit: number;
     tuple: number[] = [];

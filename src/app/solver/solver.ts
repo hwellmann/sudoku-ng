@@ -2,7 +2,16 @@ import { Sudoku } from 'app/generator/sudoku';
 import { SolutionStep } from './solution-step';
 
 export abstract class Solver {
-    sudoku: Sudoku;
+    protected theSudoku: Sudoku;
+
+    get sudoku(): Sudoku {
+        return this.theSudoku;
+    }
+
+    set sudoku(s: Sudoku) {
+        this.theSudoku = s;
+    }
+
     abstract findStep(): SolutionStep;
     abstract executeStep(step: SolutionStep): void;
     abstract canExecuteStep(step: SolutionStep): boolean;

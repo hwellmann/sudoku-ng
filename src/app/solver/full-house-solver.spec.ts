@@ -4,7 +4,7 @@ import { StepType } from './step-type';
 
 describe('FullHouseSolver', () => {
 
-    test('should solve row', () => {
+    fit('should solve row', () => {
         const sudoku = Sudoku.fromString(
             '.........91.283746...............................................................');
         const solver = new FullHouseSolver();
@@ -12,6 +12,7 @@ describe('FullHouseSolver', () => {
         const step = solver.findStep();
         expect(step).toBeDefined();
         expect(step.type).toBe(StepType.FULL_HOUSE);
+        expect(step.toString()).toBe('Full House: r2c3=5');
         expect(step.insertableCandidates.size).toBe(1);
         expect(step.insertableCandidates.get(11).get(5)).toBeTruthy();
         expect(step.deletableCandidates.size).toBe(0);

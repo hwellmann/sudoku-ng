@@ -1,10 +1,23 @@
 import { getLogger, Logger } from '@log4js2/core';
 import { Cell, NUM_DIGITS } from 'app/generator/cell';
-import { ALL_UNITS } from 'app/generator/sudoku';
+import { ALL_UNITS, Sudoku } from 'app/generator/sudoku';
 import BitSet from 'fast-bitset';
 import { SolutionStep } from './solution-step';
 import { Solver } from './solver';
 import { StepType } from './step-type';
+
+class FullHouseSolutionStep extends SolutionStep {
+    constructor() {
+        super();
+        this.type = StepType.FULL_HOUSE;
+    }
+
+    toString(): string {
+        const [index, candidates] = this.insertableCandidates.entries().next().value;
+        const digit = candidates.nextSetBit(0);
+        return `${this.type}: ${Sudoku.getPosition(index)}=${digit}`;
+    }
+}
 
 export class FullHouseSolver extends Solver {
     private readonly log: Logger = getLogger('FullHouseSolver');
@@ -39,8 +52,7 @@ export class FullHouseSolver extends Solver {
     }
 
     private buildSolutionStep(unitIndex: number, emptyCell: Cell) {
-        const step = new SolutionStep();
-        step.type = StepType.FULL_HOUSE;
+        const step = new FullHouseSolutionStep();
         step.unit = unitIndex;
         const candidate = emptyCell.candidates.nextSetBit(0);
         step.tuple.push(candidate);
