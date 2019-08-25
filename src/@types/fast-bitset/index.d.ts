@@ -7,11 +7,15 @@ declare module "fast-bitset" {
     clear(): void;
     clone(): BitSet;
     isEmpty(): boolean;
+    isEqual(other: BitSet): boolean;
     forEach(f: (a: number) => void): void;
     getIndices(): number[]
     getCardinality(): number;
     nextSetBit(from: number): number;
     toString(): string;
+    and(bn: BitSet | number): BitSet;
+    or(bn: BitSet | number): BitSet;
+    xor(bn: BitSet | number): BitSet;
   }
 
   export default BitSet;
