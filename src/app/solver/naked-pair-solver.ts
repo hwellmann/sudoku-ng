@@ -1,11 +1,10 @@
 import { getLogger, Logger } from '@log4js2/core';
-import { Cell, DIGITS, NUM_DIGITS } from 'app/generator/cell';
-import { ALL_UNITS, Sudoku, NUM_CELLS } from 'app/generator/sudoku';
+import { NUM_DIGITS } from 'app/generator/cell';
+import { ALL_UNITS, Sudoku } from 'app/generator/sudoku';
 import BitSet from 'fast-bitset';
 import { SolutionStep } from './solution-step';
 import { Solver } from './solver';
 import { StepType } from './step-type';
-import { numberLiteralTypeAnnotation } from '@babel/types';
 
 class NakedPairSolutionStep extends SolutionStep {
     constructor() {
@@ -67,7 +66,7 @@ export class NakedPairSolver extends Solver {
                 }
             }
         }
-        return null;
+        return undefined;
     }
 
     private findDeletableCandidates(indices: number[], pairIndices: number[], pair: BitSet): Map<number, BitSet> {

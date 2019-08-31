@@ -1,9 +1,9 @@
 import { getLogger, Logger } from '@log4js2/core';
-import { Sudoku } from 'app/generator/sudoku';
-import { HiddenPairSolver } from './hidden-pair-solver';
+import { HodokuCandidatesParser } from 'app/generator/hodoku-parser';
+import fs from 'fs';
+import { NakedPairSolver } from './naked-pair-solver';
 import { Solver } from './solver';
 import { StepType } from './step-type';
-import { loadavg } from 'os';
 
 describe('NakedPairSolver', () => {
     let log: Logger;
@@ -11,20 +11,29 @@ describe('NakedPairSolver', () => {
 
     beforeEach(() => {
         log = getLogger('NakedPairSolverSpec');
-        solver = new HiddenPairSolver();
+        solver = new NakedPairSolver();
     });
 
 
     test('should find hidden pair', () => {
-        const sudoku = Sudoku.fromString(
-            '98...6..537..5.1.....7...6..6.34...8.........72.....9....2.57................862.');
+        const text = fs.readFileSync('src/assets/naked-pair-cand.txt', 'utf8');
+        const parser = new HodokuCandidatesParser();
+        const sudoku = parser.parse(text);
         solver.sudoku = sudoku;
         const step = solver.findStep();
         expect(step).toBeDefined();
-        expect(step.type).toBe(StepType.HIDDEN_PAIR);
-        expect(step.insertableCandidates.size).toBe(0);
-        expect(step.deletableCandidates.size).toBe(2);
-        expect(step.toString()).toBe('Hidden Pair: 7,8 at r3c6 and r6c6, r3c6 != 4');
+        expect(step.type).toBe(StepType.NAKED_PAIR);
+        expect(step.toString()).toBe('Naked Pair: 2,9 at r2c6 and r5c6, r3c6 != 2,9');
+
+        expect(solver.canExecuteStep(step)).toBeTruthy();
+        solver.executeStep(step);
+
+        const step2 = solver.findStep();
+        expect(step2).toBeDefined();
+        expect(step2.type).toBe(StepType.NAKED_PAIR);
+        expect(step2.toString())
+            .toBe('Naked Pair: 1,4 at r7c3 and r9c1, '
+                + 'r7c1 != 1,4, r7c2 != 1,4, r8c1 != 1,4, r8c2 != 1,4, r8c3 != 1,4, r9c2 != 1,4, r9c3 != 1,4');
     });
 
 });
