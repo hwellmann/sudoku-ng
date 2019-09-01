@@ -23,7 +23,7 @@ describe('HiddenTripleSolver', () => {
         expect(step.type).toBe(StepType.HIDDEN_TRIPLE);
         expect(step.insertableCandidates.size).toBe(0);
         expect(step.deletableCandidates.size).toBe(3);
-        expect(step.toString()).toBe('Hidden Triple: 2,5,6 at r4c6, r6c6 and r8c6, r4c6 != 1,4,7,8, r6c6 != 1,4,8, r8c6 != 1,3,4,5,8');
+        expect(step.toString()).toBe('Hidden Triple: 2,5,6 at r4c6, r6c6 and r8c6, r4c6 != 1,4,7,8, r6c6 != 1,4,8, r8c6 != 1,3,4,8');
     });
 
 });

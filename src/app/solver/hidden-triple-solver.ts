@@ -117,9 +117,4 @@ export class HiddenTripleSolver extends Solver {
         this.addDeletableCandidates(step, foundIndices[2], triple);
         return step;
     }
-
-    private addDeletableCandidates(step: HiddenTripleSolutionStep, index: number, triple: BitSet): void {
-        const diff = this.sudoku.getCell(index).candidates.xor(triple);
-        step.deletableCandidates.set(index, diff);
-    }
 }

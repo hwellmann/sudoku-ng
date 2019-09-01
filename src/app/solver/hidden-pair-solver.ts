@@ -101,9 +101,4 @@ export class HiddenPairSolver extends Solver {
         this.addDeletableCandidates(step, foundIndices[1], pair);
         return step;
     }
-
-    private addDeletableCandidates(step: HiddenPairSolutionStep, index: number, pair: BitSet): void {
-        const diff = this.sudoku.getCell(index).candidates.xor(pair);
-        step.deletableCandidates.set(index, diff);
-    }
 }

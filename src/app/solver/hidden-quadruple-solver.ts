@@ -37,6 +37,10 @@ class HiddenQuadrupleSolutionStep extends SolutionStep {
         }
         return msg;
     }
+
+    addDeletableCandidates(index: number, deletable: BitSet) {
+
+    }
 }
 
 export class HiddenQuadrupleSolver extends Solver {
@@ -130,11 +134,5 @@ export class HiddenQuadrupleSolver extends Solver {
         this.addDeletableCandidates(step, foundIndices[2], quadruple);
         this.addDeletableCandidates(step, foundIndices[3], quadruple);
         return step;
-    }
-
-    private addDeletableCandidates(step: HiddenQuadrupleSolutionStep, index: number, quadruple: BitSet): void {
-        const candidates = this.sudoku.getCell(index).candidates;
-        const diff = candidates.and(candidates.xor(quadruple));
-        step.deletableCandidates.set(index, diff);
     }
 }

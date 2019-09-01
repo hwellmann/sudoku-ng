@@ -1,5 +1,6 @@
 import { Sudoku } from 'app/generator/sudoku';
 import { SolutionStep } from './solution-step';
+import BitSet from 'fast-bitset';
 
 export abstract class Solver {
     protected theSudoku: Sudoku;
@@ -28,4 +29,11 @@ export abstract class Solver {
             candidates.forEach(candidate => this.sudoku.getCell(index).removeCandidate(candidate));
         });
     }
+
+    addDeletableCandidates(step: SolutionStep, index: number, deletable: BitSet): void {
+        const candidates = this.sudoku.getCell(index).candidates;
+        const diff = candidates.and(candidates.xor(deletable));
+        step.deletableCandidates.set(index, diff);
+    }
+
 }

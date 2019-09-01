@@ -1,11 +1,9 @@
 import { getLogger, Logger } from '@log4js2/core';
-import { Sudoku } from 'app/generator/sudoku';
-import { HiddenTripleSolver } from './hidden-triple-solver';
+import { HodokuCandidatesParser } from 'app/generator/hodoku-parser';
 import fs from 'fs';
+import { HiddenQuadrupleSolver } from './hidden-quadruple-solver';
 import { Solver } from './solver';
 import { StepType } from './step-type';
-import { HiddenQuadrupleSolver } from './hidden-quadruple-solver';
-import { HodokuCandidatesParser } from 'app/generator/hodoku-parser';
 
 describe('HiddenQuadrupleSolver', () => {
     let log: Logger;
