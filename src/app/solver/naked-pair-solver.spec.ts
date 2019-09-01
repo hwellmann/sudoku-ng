@@ -15,7 +15,7 @@ describe('NakedPairSolver', () => {
     });
 
 
-    test('should find hidden pair', () => {
+    test('should find naked pair', () => {
         const text = fs.readFileSync('src/assets/naked-pair-cand.txt', 'utf8');
         const parser = new HodokuCandidatesParser();
         const sudoku = parser.parse(text);

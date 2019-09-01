@@ -62,15 +62,15 @@ export class HiddenTripleSolver extends Solver {
             if (1 <= firstCandidates.getCardinality() && firstCandidates.getCardinality() <= 3) {
                 for (let second = first + 1; second <= NUM_DIGITS; second++) {
                     const secondCandidates = candidateCellsByDigit[second];
-                    let jointCandidates = firstCandidates.or(secondCandidates);
-                    if (1 <= secondCandidates.getCardinality() && secondCandidates.getCardinality() <= 3 
+                    const jointCandidates = firstCandidates.or(secondCandidates);
+                    if (1 <= secondCandidates.getCardinality() && secondCandidates.getCardinality() <= 3
                         && jointCandidates.getCardinality() <= 3) {
                         for (let third = second + 1; third <= NUM_DIGITS; third++) {
                             const thirdCandidates = candidateCellsByDigit[third];
-                            jointCandidates = jointCandidates.or(thirdCandidates);
-                            if (1 <= thirdCandidates.getCardinality() && thirdCandidates.getCardinality() <= 3 
-                                && jointCandidates.getCardinality() === 3) {
-                                const foundIndices = jointCandidates.getIndices();
+                            const finalCandidates = jointCandidates.or(thirdCandidates);
+                            if (1 <= thirdCandidates.getCardinality() && thirdCandidates.getCardinality() <= 3
+                                && finalCandidates.getCardinality() === 3) {
+                                const foundIndices = finalCandidates.getIndices();
                                 if (this.checkAdditionalCandidates(foundIndices)) {
                                     return this.buildSolutionStep([first, second, third], foundIndices, unitIndex);
                                 }
