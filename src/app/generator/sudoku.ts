@@ -106,6 +106,16 @@ export class Sudoku {
         return new Position(1 + Sudoku.getRow(index), 1 + Sudoku.getColumn(index));
     }
 
+    static getUnitName(index: number) {
+        if (index < NUM_DIGITS) {
+            return `Row ${index + 1}`;
+        }
+        if (index < 2 * NUM_DIGITS) {
+            return `Column ${index - NUM_DIGITS + 1}`;
+        }
+        return `Block ${index - 2 * NUM_DIGITS + 1}`;
+    }
+
     static fromString(s: string): Sudoku {
         if (s.length !== NUM_CELLS) {
             throw new Error(`length must be ${NUM_CELLS}`);

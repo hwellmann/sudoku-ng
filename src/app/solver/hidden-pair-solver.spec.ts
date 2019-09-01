@@ -3,7 +3,6 @@ import { Sudoku } from 'app/generator/sudoku';
 import { HiddenPairSolver } from './hidden-pair-solver';
 import { Solver } from './solver';
 import { StepType } from './step-type';
-import { loadavg } from 'os';
 
 describe('HiddenPairSolver', () => {
     let log: Logger;
