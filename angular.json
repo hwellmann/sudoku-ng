@@ -30,7 +30,6 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "es5BrowserSupport": true,
             "webWorkerTsConfig": "tsconfig.worker.json"
           },
           "configurations": {
@@ -55,6 +54,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
