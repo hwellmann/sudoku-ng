@@ -5,8 +5,6 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { configure, LogLevel } from '@log4js2/core';
 
-import 'hammerjs';
-
 configure({
     level: LogLevel.INFO,
     virtualConsole: false
