@@ -1,7 +1,6 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { Logger, getLogger } from '@log4js2/core';
-import { Subject } from 'rxjs';
 import { CandidatesApp } from './candidates/candidates.component';
 import { DigitApp, DigitCssClass } from './digit/digit.component';
 import { AsyncGenerator } from './generator/async-generator';
@@ -20,29 +19,41 @@ enum State {
 @Injectable()
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
     isUserDefined: boolean;
-    sudoku: Sudoku = new Sudoku();
-    readonly gameChanged = new Subject<void>();
+
+    private readonly sudokuState = signal(new Sudoku());
+    private readonly stateSignal = signal(State.PLAY);
+    private selectedDigit: number;
+    private selectedCell: Cell;
+
+    get sudoku(): Sudoku {
+        return this.sudokuState();
+    }
+
+    set sudoku(value: Sudoku) {
+        this.sudokuState.set(value);
+    }
+
+    private get state(): State {
+        return this.stateSignal();
+    }
+
+    private set state(value: State) {
+        this.stateSignal.set(value);
+    }
 
     private asyncGenerator: AsyncGenerator;
     private solver: BacktrackingSolver = new BacktrackingSolver();
 
     private readonly log: Logger = getLogger('GameController');
 
-    private selectedDigit: number;
-    private selectedCell: Cell;
-    private state: State = State.PLAY;
-
-    constructor(public snackBar: MatSnackBar, private zone: NgZone) {
+    constructor(public snackBar: MatSnackBar) {
         this.asyncGenerator = new AsyncGenerator(
             (sudoku) => {
-                this.zone.run(() => {
-                    this.sudoku = sudoku;
-                    this.state = State.PLAY;
-                    this.gameChanged.next();
-                });
+                this.sudoku = sudoku;
+                this.state = State.PLAY;
             },
             () => {
-                this.zone.run(() => this.openSnackBar('warning', 'Failed to generate a new Sudoku'));
+                this.openSnackBar('warning', 'Failed to generate a new Sudoku');
             }
         );
     }
@@ -56,12 +67,10 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         this.log.info('own game');
         this.sudoku = new Sudoku();
         this.state = State.ENTER_GAME;
-        this.gameChanged.next();
     }
 
     onDestroy(): void {
         this.asyncGenerator.onDestroy();
-        this.gameChanged.complete();
     }
 
     about(): void {
