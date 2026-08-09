@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Cell } from 'app/generator/cell';
 
 export abstract class CandidatesApp {
@@ -10,6 +10,8 @@ export abstract class CandidatesApp {
 @Component({
     selector: 'sudoku-candidates',
     styleUrls: ['./candidates.component.scss'],
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './candidates.component.html',
 })
 export class CandidatesComponent {

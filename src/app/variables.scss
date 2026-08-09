@@ -1,10 +1,12 @@
-$cell-size: 9vw;
-$max-cell-size: 45px;
+@use "sass:math";
 
-$roboto-to-cell: 5/8;
+$cell-size: 8.5vmin;
+$max-cell-size: 58px;
+
+$roboto-to-cell: math.div(5, 8);
 $roboto-font-size: $roboto-to-cell * $cell-size;
 $max-roboto-font-size: $roboto-to-cell * $max-cell-size;
 
-$swanky-to-cell: 6/8;
+$swanky-to-cell: math.div(6, 8);
 $swanky-font-size: $swanky-to-cell * $cell-size;
 $max-swanky-font-size: $swanky-to-cell * $max-cell-size;

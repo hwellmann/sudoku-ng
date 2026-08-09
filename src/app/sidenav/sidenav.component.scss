@@ -3,6 +3,10 @@ button {
   text-align: left;
 }
 
+button.mat-mdc-button-base {
+  justify-content: flex-start;
+}
+
 mat-grid-list button {
   padding: 0 8px;
 }

@@ -15,12 +15,15 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/sudoku-ng",
+            "outputPath": {
+              "base": "dist/sudoku-ng"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -29,8 +32,13 @@
             "styles": [
               "src/styles.scss"
             ],
+            "allowedCommonJsDependencies": [
+              "@log4js2/core",
+              "fast-bitset"
+            ],
             "scripts": [],
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            "webWorkerTsConfig": "tsconfig.worker.json",
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -47,8 +55,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -64,20 +70,21 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
-            "browserTarget": "sudoku-ng:build"
+            "buildTarget": "sudoku-ng:build",
+            "prebundle": false
           },
           "configurations": {
             "production": {
-              "browserTarget": "sudoku-ng:build:production"
+              "buildTarget": "sudoku-ng:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sudoku-ng:build"
+            "buildTarget": "sudoku-ng:build"
           }
         },
         "test": {
@@ -141,5 +148,7 @@
       }
     }
   },
-  "defaultProject": "sudoku-ng"
+  "cli": {
+    "analytics": false
+  }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 export interface Theme {
     name: string;
@@ -18,6 +18,8 @@ export abstract class SidenavApp {
 @Component({
     selector: 'sudoku-sidenav',
     styleUrls: ['./sidenav.component.scss'],
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './sidenav.component.html',
 })
 export class SidenavComponent {

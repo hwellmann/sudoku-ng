@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 
 export abstract class ToolbarApp {
@@ -16,6 +16,8 @@ export abstract class ToolbarApp {
 @Component({
     selector: 'sudoku-toolbar',
     styleUrls: ['./toolbar.component.scss'],
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent {

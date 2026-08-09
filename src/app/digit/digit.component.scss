@@ -1,27 +1,31 @@
-@import "../variables.scss";
-
-$circle-to-cell: 4/3;
-$circle-size: $circle-to-cell * $cell-size;
-$max-circle-size: $circle-to-cell * $max-cell-size;
+.digit-pad {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px 8px;
+  justify-items: center;
+  align-items: center;
+  width: min(92vw, 520px);
+  margin: 0 auto;
+}
 
 button.digit {
-  margin: 5px 10px;
+  margin: 0;
   min-width: unset;
   padding: unset;
   font-family: "Swanky and Moo Moo", Roboto, "Helvetica Neue", sans-serif;
-  width: $circle-size;
-  height: $circle-size;
-  font-size: $swanky-font-size;
+  width: var(--sudoku-pad-button-size);
+  aspect-ratio: 1;
+  font-size: var(--sudoku-pad-digit-size);
+  line-height: 1;
 }
 
 @media screen and (min-width: 500px) {
-  button.digit {
-    width: $max-circle-size;
-    height: $max-circle-size;
-    font-size: $max-swanky-font-size;
+  .digit-pad {
+    width: min(74vw, 560px);
+    gap: 8px 12px;
   }
 
   button.digit.candidateDigit {
-    font-size: $max-swanky-font-size / 2;
+    font-size: clamp(12px, 2.4vmin, 22px);
   }
 }

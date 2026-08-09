@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { Sudoku } from 'app/generator/sudoku';
 import { Cell } from 'app/generator/cell';
 import { Logger, getLogger } from '@log4js2/core';
@@ -24,6 +24,8 @@ export abstract class GridApp {
 @Component({
     selector: 'sudoku-grid',
     styleUrls: ['./grid.component.scss'],
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './grid.component.html',
 })
 export class GridComponent {

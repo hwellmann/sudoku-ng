@@ -1,5 +1,5 @@
 import { configure, LogLevel } from '@log4js2/core';
-import 'jest-preset-angular';
+import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
 
 /* global mocks for jsdom */
 const mock = () => {
@@ -50,3 +50,5 @@ global.console = new CustomConsole(process.stdout, process.stderr, simpleFormatt
 configure({
     level: LogLevel.INFO
 });
+
+setupZoneTestEnv();

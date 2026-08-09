@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 export interface DigitCssClass {
     selectedDigit: boolean;
@@ -17,6 +17,8 @@ export abstract class DigitApp {
 @Component({
     selector: 'sudoku-digit',
     styleUrls: ['./digit.component.scss'],
+    standalone: false,
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './digit.component.html',
 })
 export class DigitComponent {

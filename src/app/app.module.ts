@@ -9,7 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateHttpLoader, TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 import { CandidatesApp, CandidatesComponent } from './candidates/candidates.component';
 import { DigitApp, DigitComponent } from './digit/digit.component';
@@ -17,12 +17,6 @@ import { GameController } from './game.controller';
 import { GridApp, GridComponent } from './grid/grid.component';
 import { SidenavApp, SidenavComponent } from './sidenav/sidenav.component';
 import { ToolbarApp, ToolbarComponent } from './toolbar/toolbar.component';
-
-
-export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http);
-}
-
 
 @NgModule({
     declarations: [
@@ -44,16 +38,19 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatToolbarModule,
         MatTooltipModule,
         TranslateModule.forRoot({
-            defaultLanguage: 'en',
+            fallbackLang: 'en',
             loader: {
                 provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [ HttpClient ]
+                useClass: TranslateHttpLoader,
             }
-        })
+        }),
     ],
     providers: [
         GameController,
+        ...provideTranslateHttpLoader({
+            prefix: './assets/i18n/',
+            suffix: '.json'
+        }),
         { provide: CandidatesApp, useExisting: GameController },
         { provide: SidenavApp, useExisting: GameController },
         { provide: GridApp, useExisting: GameController },

@@ -1,107 +1,129 @@
+@use "./app/variables" as *;
+
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
-@import '~@angular/material/theming';
+:root {
+  --sudoku-cell-size: clamp(34px, min(#{$cell-size}, 7.2vh), #{$max-cell-size});
+  --sudoku-grid-digit-size: calc(var(--sudoku-cell-size) * #{$roboto-to-cell});
+  --sudoku-pad-button-size: calc(var(--sudoku-cell-size) * 1.08);
+  --sudoku-pad-digit-size: calc(var(--sudoku-cell-size) * 0.65);
+}
 
-@include mat-core();
+.mat-simple-snackbar {
+  justify-content: center !important;
+}
 
+.warning {
+  white-space: pre-line;
+  text-align: center;
+  background-color: #ef5350;
+}
 
-@mixin my-components-theme($theme) {
-    $primary: map-get($theme, primary);
-    $accent: map-get($theme, accent);
-    $warn: map-get($theme, warn);
-    $foreground: map-get($theme, foreground);
-    $background: map-get($theme, background);
-  
-    .mat-simple-snackbar {
-      justify-content: center !important;
-    }
-  
-    .warning {
-      white-space: pre-line;
-      text-align: center;
-      background-color: mat-color($warn);
-    }
-  
-    .solved {
-      white-space: pre-line;
-      text-align: center;
-      background-color: mat-color($accent);
-    }
-  
-    /* for map keys, see https://github.com/angular/material2/blob/master/src/lib/core/theming/_palette.scss */
-    tr {
-      border-top-color: mat-color($foreground, disabled);
-    }
-  
-    tr.row_9 {
-      border-bottom-color: mat-color($foreground, disabled);
-    }
-  
-    td {
-      border-left-color: mat-color($foreground, disabled);
-    }
-  
-    td.col_9 {
-      border-right-color: mat-color($foreground, disabled);
-    }
-  
-    td>button {
-      color: mat-color($foreground, text);
-    }
-  
-    button.digit:hover:enabled {
-      background-color: mat-color($background, focused-button);
-    }
-  
-    td>button.initialClue {
-      color: mat-color($foreground, secondary-text) !important;
-    }
-  
-    .selectedDigit {
-      background-color: mix(mat-color($background, background), mat-color($primary, lighter)) !important;
-    }
+.solved {
+  white-space: pre-line;
+  text-align: center;
+  background-color: #ec407a;
+}
 
-    .candidateDigit {
-      font-size: 12px;  
-    }
-  
-    .lastSolvedField {
-      background-color: mix(mat-color($background, background), mat-color($primary)) !important;
-    }
-  
-    .onlyOnePossibleDigit {
-      background-color: mix(mat-color($background, background), mat-color($accent, lighter)) !important;
-    }
-  
-    .groupForLastSolvedField {
-      background-color: mat-color($background, status-bar);
-    }
-  }
-  
-  // default theme
-  $candy-app-primary: mat-palette($mat-indigo);
-  $candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
-  $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
-  
-  @include angular-material-theme($candy-app-theme);
-  @include my-components-theme($candy-app-theme);
+tr {
+  border-top-color: rgba(0, 0, 0, 0.2);
+}
+
+tr.row_9 {
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+}
+
+td {
+  border-left-color: rgba(0, 0, 0, 0.2);
+}
+
+td.col_9 {
+  border-right-color: rgba(0, 0, 0, 0.2);
+}
+
+td > button {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+button.digit:hover:enabled {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+td > button.initialClue {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.selectedDigit {
+  background-color: rgba(63, 81, 181, 0.2) !important;
+}
+
+.candidateDigit {
+  font-size: 12px;
+}
+
+.lastSolvedField {
+  background-color: rgba(63, 81, 181, 0.28) !important;
+}
+
+.onlyOnePossibleDigit {
+  background-color: rgba(236, 64, 122, 0.18) !important;
+}
+
+.groupForLastSolvedField {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+sudoku-grid td.field {
+  width: var(--sudoku-cell-size);
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+sudoku-grid td.field > button.mat-mdc-button-base,
+sudoku-grid td.field > button.mat-button {
+  width: 100%;
+  height: 100%;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+}
+
+sudoku-candidates table.candidate {
+  width: 100%;
+  height: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+sudoku-candidates tr.candidates {
+  height: 33.333%;
+}
+
+sudoku-candidates td.candidate {
+  width: 33.333%;
+  height: 33.333%;
+  padding: 0;
+  border: none;
+}
+
+sudoku-candidates td.candidate > button.mat-mdc-button-base,
+sudoku-candidates td.candidate > button.mat-button,
+sudoku-candidates td.candidate > button {
+  width: 100%;
+  height: 100%;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  line-height: 1;
+}
   
 
 table.candidate {
     border: none;
     border-spacing: 0;
 }  
-td.candidate > button.mat-button {
-    min-width: 10px;
-    line-height: unset;
-    padding: 0;
-    font-size: 10px;
-}
-
-td.candidate {
-    padding: 0;
-    border: none;
-}
 
   

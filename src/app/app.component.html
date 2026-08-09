@@ -2,11 +2,17 @@
     <mat-sidenav #sidenav (click)="sidenav.toggle()">
         <sudoku-sidenav></sudoku-sidenav>
     </mat-sidenav>
-    <mat-sidenav-content>
-        <mat-toolbar color="primary" style="margin-bottom: 10px">
+    <mat-sidenav-content class="app-shell">
+        <mat-toolbar color="primary" class="top-bar">
             <sudoku-toolbar (sidenavOpened)="sidenav.open()"></sudoku-toolbar>
         </mat-toolbar>
-        <sudoku-grid></sudoku-grid>
-        <sudoku-digit class="center"></sudoku-digit>
+
+        <main class="board-stage">
+            <sudoku-grid></sudoku-grid>
+        </main>
+
+        <footer class="digit-dock">
+            <sudoku-digit></sudoku-digit>
+        </footer>
     </mat-sidenav-content>
 </mat-sidenav-container>
