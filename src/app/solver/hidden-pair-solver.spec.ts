@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest';
 import { getLogger, Logger } from '@log4js2/core';
 import { Sudoku } from 'app/generator/sudoku';
 import { HiddenPairSolver } from './hidden-pair-solver';

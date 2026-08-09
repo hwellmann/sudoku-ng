@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest';
 import { getLogger, Logger } from '@log4js2/core';
 import { HodokuCandidatesParser } from 'app/generator/hodoku-parser';
 import fs from 'fs';

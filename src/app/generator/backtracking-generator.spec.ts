@@ -1,4 +1,5 @@
 import { getLogger, Logger } from '@log4js2/core';
+import { beforeEach, describe, test } from 'vitest';
 import { BacktrackingGenerator } from './backtracking-generator';
 
 describe('BacktrackingGenerator', () => {

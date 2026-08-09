@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest';
 import { Sudoku } from 'app/generator/sudoku';
 import { FullHouseSolver } from './full-house-solver';
 import { NakedSingleSolver } from './naked-single-solver';

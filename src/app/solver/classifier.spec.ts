@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest';
 import { getLogger, Logger } from '@log4js2/core';
 import { BacktrackingGenerator } from 'app/generator/backtracking-generator';
 import { Sudoku } from 'app/generator/sudoku';
