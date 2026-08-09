@@ -1,4 +1,4 @@
-import { ApplicationRef, Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Logger, getLogger } from '@log4js2/core';
 import { SidenavApp } from './sidenav/sidenav.component';
 import { GridApp, FieldCssClass } from './grid/grid.component';
@@ -9,7 +9,6 @@ import { CandidatesApp } from './candidates/candidates.component';
 import { AsyncGenerator } from './generator/async-generator';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { BacktrackingSolver } from './generator/backtracking-solver';
-import { Subject } from 'rxjs';
 
 enum State {
     ENTER_GAME,
@@ -21,7 +20,6 @@ enum State {
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
     isUserDefined: boolean;
     sudoku: Sudoku = new Sudoku();
-    readonly gameChanged = new Subject<void>();
 
     private asyncGenerator: AsyncGenerator;
     private solver: BacktrackingSolver = new BacktrackingSolver();
@@ -32,14 +30,12 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     private selectedCell: Cell;
     private state: State = State.PLAY;
 
-    constructor(public snackBar: MatSnackBar, private zone: NgZone, private appRef: ApplicationRef) {
+    constructor(public snackBar: MatSnackBar, private zone: NgZone) {
         this.asyncGenerator = new AsyncGenerator(
             (sudoku) => {
                 this.zone.run(() => {
                     this.sudoku = sudoku;
                     this.state = State.PLAY;
-                    this.appRef.tick();
-                    this.gameChanged.next();
                 });
             },
             () => {
@@ -57,12 +53,10 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         this.log.info('own game');
         this.sudoku = new Sudoku();
         this.state = State.ENTER_GAME;
-        this.gameChanged.next();
     }
 
     onDestroy(): void {
         this.asyncGenerator.onDestroy();
-        this.gameChanged.complete();
     }
 
     about(): void {
