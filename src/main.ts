@@ -1,9 +1,18 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
-import { AppModule } from './app/app.module';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { provideTranslateHttpLoader, TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { configure, LogLevel } from '@log4js2/core';
+import { GameController } from './app/game.controller';
+import { CandidatesApp } from './app/candidates/candidates.component';
+import { SidenavApp } from './app/sidenav/sidenav.component';
+import { GridApp } from './app/grid/grid.component';
+import { ToolbarApp } from './app/toolbar/toolbar.component';
+import { DigitApp } from './app/digit/digit.component';
 
 configure({
     level: LogLevel.INFO,
@@ -14,5 +23,29 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideHttpClient(),
+    provideNoopAnimations(),
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        fallbackLang: 'en',
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateHttpLoader,
+        }
+      })
+    ),
+    ...provideTranslateHttpLoader({
+      prefix: './assets/i18n/',
+      suffix: '.json'
+    }),
+    GameController,
+    { provide: CandidatesApp, useExisting: GameController },
+    { provide: SidenavApp, useExisting: GameController },
+    { provide: GridApp, useExisting: GameController },
+    { provide: ToolbarApp, useExisting: GameController },
+    { provide: DigitApp, useExisting: GameController }
+  ]
+})
   .catch(err => console.error(err));

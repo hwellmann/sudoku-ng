@@ -1,14 +1,15 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Logger, getLogger } from '@log4js2/core';
-import { SidenavApp } from './sidenav/sidenav.component';
-import { GridApp, FieldCssClass } from './grid/grid.component';
-import { Sudoku } from './generator/sudoku';
-import { Cell, NUM_DIGITS } from './generator/cell';
-import { DigitApp, DigitCssClass } from './digit/digit.component';
-import { CandidatesApp } from './candidates/candidates.component';
-import { AsyncGenerator } from './generator/async-generator';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { Logger, getLogger } from '@log4js2/core';
+import { Subject } from 'rxjs';
+import { CandidatesApp } from './candidates/candidates.component';
+import { DigitApp, DigitCssClass } from './digit/digit.component';
+import { AsyncGenerator } from './generator/async-generator';
 import { BacktrackingSolver } from './generator/backtracking-solver';
+import { Cell, NUM_DIGITS } from './generator/cell';
+import { Sudoku } from './generator/sudoku';
+import { FieldCssClass, GridApp } from './grid/grid.component';
+import { SidenavApp } from './sidenav/sidenav.component';
 
 enum State {
     ENTER_GAME,
@@ -20,6 +21,7 @@ enum State {
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
     isUserDefined: boolean;
     sudoku: Sudoku = new Sudoku();
+    readonly gameChanged = new Subject<void>();
 
     private asyncGenerator: AsyncGenerator;
     private solver: BacktrackingSolver = new BacktrackingSolver();
@@ -36,6 +38,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
                 this.zone.run(() => {
                     this.sudoku = sudoku;
                     this.state = State.PLAY;
+                    this.gameChanged.next();
                 });
             },
             () => {
@@ -53,10 +56,12 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         this.log.info('own game');
         this.sudoku = new Sudoku();
         this.state = State.ENTER_GAME;
+        this.gameChanged.next();
     }
 
     onDestroy(): void {
         this.asyncGenerator.onDestroy();
+        this.gameChanged.complete();
     }
 
     about(): void {

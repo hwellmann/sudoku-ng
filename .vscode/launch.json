@@ -18,17 +18,6 @@
             "disableOptimisticBPs": true
         },
         {
-            "name": "Launch ng e2e",
-            "type": "node",
-            "request": "launch",
-            "port": 9222,
-            "program": "${workspaceRoot}/node_modules/protractor/bin/protractor",
-            "protocol": "inspector",
-            "args": [
-                "${workspaceRoot}/protractor.conf.js"
-            ]
-        },
-        {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",

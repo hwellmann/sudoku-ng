@@ -1,5 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Cell } from 'app/generator/cell';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 export abstract class CandidatesApp {
     abstract candidateClicked(cell: Cell, candidate: number): void;
@@ -10,7 +12,8 @@ export abstract class CandidatesApp {
 @Component({
     selector: 'sudoku-candidates',
     styleUrls: ['./candidates.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './candidates.component.html',
 })

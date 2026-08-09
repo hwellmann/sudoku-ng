@@ -1,4 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 export interface DigitCssClass {
     selectedDigit: boolean;
@@ -17,7 +19,8 @@ export abstract class DigitApp {
 @Component({
     selector: 'sudoku-digit',
     styleUrls: ['./digit.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './digit.component.html',
 })

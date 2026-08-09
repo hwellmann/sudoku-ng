@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export abstract class ToolbarApp {
     abstract readonly sidenav: MatSidenav;
@@ -16,7 +19,8 @@ export abstract class ToolbarApp {
 @Component({
     selector: 'sudoku-toolbar',
     styleUrls: ['./toolbar.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [MatButtonModule, MatIconModule, MatTooltipModule],
     changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './toolbar.component.html',
 })

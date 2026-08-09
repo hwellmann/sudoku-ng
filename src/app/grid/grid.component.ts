@@ -2,6 +2,9 @@ import { Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angu
 import { Sudoku } from 'app/generator/sudoku';
 import { Cell } from 'app/generator/cell';
 import { Logger, getLogger } from '@log4js2/core';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { CandidatesComponent } from '../candidates/candidates.component';
 
 export interface FieldCssClass {
     field: boolean;
@@ -24,7 +27,8 @@ export abstract class GridApp {
 @Component({
     selector: 'sudoku-grid',
     styleUrls: ['./grid.component.scss'],
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, MatButtonModule, CandidatesComponent],
     changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './grid.component.html',
 })
