@@ -14,7 +14,11 @@ button.digit {
   padding: unset;
   font-family: "Swanky and Moo Moo", Roboto, "Helvetica Neue", sans-serif;
   width: var(--sudoku-pad-button-size);
-  aspect-ratio: 1;
+  height: var(--sudoku-pad-button-size);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: var(--sudoku-pad-digit-size);
   line-height: 1;
 }

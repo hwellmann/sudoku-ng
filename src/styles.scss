@@ -76,7 +76,7 @@ td > button.initialClue {
 
 sudoku-grid td.field {
   width: var(--sudoku-cell-size);
-  aspect-ratio: 1;
+  height: var(--sudoku-cell-size);
   padding: 0;
   overflow: hidden;
   vertical-align: middle;
