@@ -1,18 +1,16 @@
 import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient } from '@angular/common/http';
+import { configure, LogLevel } from '@log4js2/core';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader, TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app/app.component';
-import { environment } from './environments/environment';
-import { configure, LogLevel } from '@log4js2/core';
-import { GameController } from './app/game.controller';
 import { CandidatesApp } from './app/candidates/candidates.component';
-import { SidenavApp } from './app/sidenav/sidenav.component';
-import { GridApp } from './app/grid/grid.component';
-import { ToolbarApp } from './app/toolbar/toolbar.component';
 import { DigitApp } from './app/digit/digit.component';
+import { GameController } from './app/game.controller';
+import { GridApp } from './app/grid/grid.component';
+import { SidenavApp } from './app/sidenav/sidenav.component';
+import { ToolbarApp } from './app/toolbar/toolbar.component';
+import { environment } from './environments/environment';
 
 configure({
     level: LogLevel.INFO,
@@ -26,8 +24,6 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideZonelessChangeDetection(),
-    provideHttpClient(),
-    provideNoopAnimations(),
     importProvidersFrom(
       TranslateModule.forRoot({
         fallbackLang: 'en',
