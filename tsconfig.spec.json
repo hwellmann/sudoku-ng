@@ -4,10 +4,10 @@
     "allowJs": true,  
     "outDir": "out-tsc/spec",
     "types": [
-      "jest",
+      "vitest/globals",
       "node"
     ],
-    "module": "commonjs"
+    "module": "es2022"
   },
   "files": [
     "polyfills.ts"

@@ -30,7 +30,7 @@ describe('Classifier', () => {
         expect(classifier.classify(sudoku)).toBe(Level.HARD);
     });
 
-    xtest('generate and classify', () => {
+    test.skip('generate and classify', () => {
         for (let i = 0; i < 10; i++) {
             const sudoku = generator.generatePuzzle();
             log.info(sudoku.asString());

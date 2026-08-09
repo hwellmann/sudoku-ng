@@ -4,7 +4,7 @@ import { StepType } from './step-type';
 
 describe('FullHouseSolver', () => {
 
-    fit('should solve row', () => {
+    test('should solve row', () => {
         const sudoku = Sudoku.fromString(
             '.........91.283746...............................................................');
         const solver = new FullHouseSolver();
