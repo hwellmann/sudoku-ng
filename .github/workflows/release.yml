@@ -23,7 +23,6 @@ jobs:
       run: |
         echo ${GITHUB_REF}
         npm ci
-        npm run metadata 
         npm run build
 
     - name: Deploy
