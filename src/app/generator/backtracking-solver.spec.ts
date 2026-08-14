@@ -24,6 +24,16 @@ describe('BacktrackingSolver', () => {
         expect(solutions[0].asString())
             .toBe('761593842249168537358742691935276418874315926612984375426831759187459263593627184');
     });
+    
+    test('should solve with 17 clues', () => {
+        const sudoku = Sudoku.fromString(
+            '.......1.4.........2...........5.4.7..8...3....1.9....3..4..2...5.1........8.6...');
+        const solutions = solver.solve(sudoku);
+        expect(solutions.length)
+            .toBe(1);
+        expect(solutions[0].asString())
+            .toBe('693784512487512936125963874932651487568247391741398625319475268856129743274836159');
+    });
 
     test('should find three solutions', () => {
         const sudoku = Sudoku.fromString(
