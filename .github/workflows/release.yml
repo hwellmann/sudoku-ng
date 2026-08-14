@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - '**'
+    branches:
+    - none
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Use Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: 22.22.3
+        cache: npm
+    - name: Build
+      run: |
+        echo ${GITHUB_REF}
+        npm ci
+        npm run metadata 
+        npm run build
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        personal_token: ${{ secrets.DEPLOYMENT_TOKEN }}
+        external_repository: sudoku-ng/sudoku-ng.github.io
+        publish_branch: master
+        publish_dir: ./dist/browser       
+
