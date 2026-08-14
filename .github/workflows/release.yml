@@ -31,5 +31,5 @@ jobs:
         personal_token: ${{ secrets.DEPLOYMENT_TOKEN }}
         external_repository: sudoku-ng/sudoku-ng.github.io
         publish_branch: master
-        publish_dir: ./dist/browser       
+        publish_dir: ./dist/sudoku-ng/browser
 
