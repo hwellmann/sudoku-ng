@@ -1,10 +1,10 @@
-.digit-pad {
+.button-bar {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--sudoku-pad-gap) 8px;
+  gap: var(--sudoku-button-gap) 8px;
   justify-items: center;
   align-items: center;
-  width: var(--sudoku-pad-width);
+  width: var(--sudoku-button-bar-width);
   margin: 0 auto;
 }
 
@@ -13,8 +13,8 @@ button.digit {
   min-width: unset;
   padding: unset;
   font-family: "Swanky and Moo Moo", Roboto, "Helvetica Neue", sans-serif;
-  width: var(--sudoku-pad-button-size);
-  height: var(--sudoku-pad-button-size);
+  width: var(--sudoku-button-size);
+  height: var(--sudoku-button-size);
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -28,7 +28,7 @@ button.digit.candidateDigit {
 }
 
 @media screen and (max-height: 500px) and (orientation: landscape) {
-  .digit-pad {
+  .button-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

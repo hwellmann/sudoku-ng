@@ -1,38 +1,47 @@
-@use "./app/variables" as *;
-
 /* You can add global styles to this file, and also import other style files */
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 :root {
-  /* space taken up by the grid borders, which is not available for the cells */
+  // space taken up by the grid borders, which is not available for the cells
+  // 4 * 3px for the thick borders, 6*1px for the thin borders
   --sudoku-grid-border-width: 18px;
+  // upper bound for a grid cell, so the board does not get unwieldy on large screens
+  --sudoku-max-cell-size: 58px;
+  --sudoku-max-board-size: calc(9 * var(--sudoku-max-cell-size) + var(--sudoku-grid-border-width));
+  // lower bound, below which the candidates become unreadable
+  --sudoku-min-cell-size: 22px;
+  --sudoku-min-board-size: calc(9 * var(--sudoku-min-cell-size) + var(--sudoku-grid-border-width));
+  // Roboto renders the digits of a solved cell, its glyphs fill 5/8 of the cell
+  --sudoku-roboto-to-cell: 0.625;
   --sudoku-viewport-height: 100vh;
   --sudoku-toolbar-height: 56px;
   --sudoku-shell-padding: 0.5rem;
-  --sudoku-pad-gap: 6px;
+  --sudoku-button-gap: 6px;
 
-  --sudoku-pad-width: min(calc(100vw - 2 * var(--sudoku-shell-padding)), 520px);
-  --sudoku-pad-button-size: min(calc((var(--sudoku-pad-width) - 4 * 8px) / 5), 56px);
+  --sudoku-button-bar-width: min(calc(100vw - 2 * var(--sudoku-shell-padding)), 520px);
+  --sudoku-button-size: min(calc((var(--sudoku-button-bar-width) - 4 * 8px) / 5), 56px);
   /* two rows of buttons plus the row gap and the dock padding */
-  --sudoku-pad-height: calc(2 * var(--sudoku-pad-button-size) + var(--sudoku-pad-gap) + var(--sudoku-shell-padding));
+  --sudoku-button-bar-height: calc(2 * var(--sudoku-button-size) + var(--sudoku-button-gap) + var(--sudoku-shell-padding));
 
   --sudoku-board-size: max(
-    216px,
+    var(--sudoku-min-board-size),
     min(
       calc(100vw - 2 * var(--sudoku-shell-padding)),
       calc(
-        var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - var(--sudoku-pad-height) - 2 *
-          var(--sudoku-shell-padding)
+        var(--sudoku-viewport-height) 
+        - var(--sudoku-toolbar-height) 
+        - var(--sudoku-button-bar-height) 
+        - 2 * var(--sudoku-shell-padding)
       ),
-      calc(#{9 * $max-cell-size} + var(--sudoku-grid-border-width))
+      var(--sudoku-max-board-size)
     )
   );
   --sudoku-cell-size: calc((var(--sudoku-board-size) - var(--sudoku-grid-border-width)) / 9);
 
-  --sudoku-grid-digit-size: calc(var(--sudoku-cell-size) * #{$roboto-to-cell});
+  --sudoku-grid-digit-size: calc(var(--sudoku-cell-size) * var(--sudoku-roboto-to-cell));
   --sudoku-candidate-digit-size: calc(var(--sudoku-cell-size) * 0.26);
-  --sudoku-pad-digit-size: calc(var(--sudoku-pad-button-size) * 0.6);
-  --sudoku-pad-candidate-digit-size: calc(var(--sudoku-pad-button-size) * 0.38);
+  --sudoku-pad-digit-size: calc(var(--sudoku-button-size) * 0.6);
+  --sudoku-pad-candidate-digit-size: calc(var(--sudoku-button-size) * 0.38);
 }
 
 @supports (height: 100dvh) {
@@ -51,22 +60,22 @@
 /* landscape phones: the pad moves next to the board, so it costs width instead of height */
 @media screen and (max-height: 500px) and (orientation: landscape) {
   :root {
-    --sudoku-pad-button-size: min(
+    --sudoku-button-size: min(
       calc(
         (
-            var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - 4 * var(--sudoku-pad-gap) - 2 *
+            var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - 4 * var(--sudoku-button-gap) - 2 *
               var(--sudoku-shell-padding)
           ) / 5
       ),
       48px
     );
-    --sudoku-pad-width: calc(2 * var(--sudoku-pad-button-size) + 8px);
+    --sudoku-button-bar-width: calc(2 * var(--sudoku-button-size) + 8px);
     --sudoku-board-size: max(
-      216px,
+      var(--sudoku-min-board-size),
       min(
-        calc(100vw - var(--sudoku-pad-width) - 3 * var(--sudoku-shell-padding)),
+        calc(100vw - var(--sudoku-button-bar-width) - 3 * var(--sudoku-shell-padding)),
         calc(var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - 2 * var(--sudoku-shell-padding)),
-        calc(#{9 * $max-cell-size} + var(--sudoku-grid-border-width))
+        var(--sudoku-max-board-size)
       )
     );
   }
@@ -78,7 +87,7 @@
  */
 @supports (container-type: size) and (width: 1cqmin) {
   sudoku-grid {
-    --sudoku-board-size: min(100cqmin, #{9 * $max-cell-size} + var(--sudoku-grid-border-width));
+    --sudoku-board-size: min(100cqmin, var(--sudoku-max-board-size));
     --sudoku-cell-size: calc((var(--sudoku-board-size) - var(--sudoku-grid-border-width)) / 9);
   }
 }
