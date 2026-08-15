@@ -152,40 +152,9 @@ body {
   );
 }
 
-tr {
-  border-top-color: var(--mat-sys-outline-variant);
-}
-
-tr.row_9 {
-  border-bottom-color: var(--mat-sys-outline-variant);
-}
-
-td {
-  border-left-color: var(--mat-sys-outline-variant);
-}
-
-td.col_9 {
-  border-right-color: var(--mat-sys-outline-variant);
-}
-
-td > button.initialClue {
-  @include mat.button-overrides(
-    (
-      text-label-text-color: var(--mat-sys-on-surface-variant),
-    )
-  );
-}
-
-button.digit:hover:enabled {
-  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
-}
-
+/* highlights, used both on grid cells and on button bar buttons */
 .selectedDigit {
   background-color: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent) !important;
-}
-
-.candidateDigit {
-  font-size: var(--sudoku-pad-candidate-digit-size);
 }
 
 .lastSolvedField {
@@ -200,68 +169,316 @@ button.digit:hover:enabled {
   background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
 }
 
-sudoku-grid td.field {
-  width: var(--sudoku-cell-size);
-  height: var(--sudoku-cell-size);
-  padding: 0;
-  overflow: hidden;
-  vertical-align: middle;
-  box-sizing: content-box;
-  /* no inline line box, otherwise the cell grows taller than it is wide */
-  line-height: 0;
-  font-size: 0;
+/* app shell */
+sudoku-root {
+  .mat-drawer {
+    width: 15em;
+  }
+
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    height: var(--sudoku-viewport-height);
+    overflow: hidden;
+  }
+
+  .top-bar {
+    margin-bottom: 0;
+    flex: none;
+    /* the deprecated color="primary" input has no effect under a Material 3 theme */
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+
+    @include mat.icon-button-overrides(
+      (
+        icon-color: var(--mat-sys-on-primary),
+      )
+    );
+  }
+
+  .board-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sudoku-shell-padding);
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    container-type: size;
+  }
+
+  .digit-dock {
+    display: flex;
+    justify-content: center;
+    flex: none;
+    padding: 0 var(--sudoku-shell-padding) var(--sudoku-shell-padding);
+  }
 }
 
-sudoku-grid td.field > button.mat-mdc-button-base,
-sudoku-grid td.field > button.mat-button {
-  width: 100%;
-  height: 100%;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
+@media screen and (min-width: 600px) {
+  sudoku-root .top-bar {
+    margin-bottom: 0.5rem;
+  }
 }
 
-sudoku-candidates table.candidate {
-  width: 100%;
-  height: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  sudoku-root {
+    .app-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .top-bar {
+      grid-column: 1 / -1;
+      margin-bottom: 0;
+    }
+
+    .board-stage {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .digit-dock {
+      grid-column: 2;
+      grid-row: 2;
+      align-items: center;
+      padding: var(--sudoku-shell-padding) var(--sudoku-shell-padding) var(--sudoku-shell-padding) 0;
+    }
+  }
 }
 
-sudoku-candidates tr.candidates {
-  height: calc(var(--sudoku-cell-size) / 3);
-}
-
-sudoku-candidates td.candidate {
-  width: calc(var(--sudoku-cell-size) / 3);
-  height: calc(var(--sudoku-cell-size) / 3);
-  padding: 0;
-  border: none;
-  line-height: 0;
-  font-size: 0;
-}
-
-sudoku-candidates td.candidate > button.mat-mdc-button-base,
-sudoku-candidates td.candidate > button.mat-button,
-sudoku-candidates td.candidate > button {
+/* toolbar */
+sudoku-toolbar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
   width: 100%;
-  height: 100%;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  line-height: 1;
-  font-size: var(--sudoku-candidate-digit-size);
-  letter-spacing: normal;
-  overflow: hidden;
+
+  h1 {
+    margin: 0;
+    line-height: 1;
+  }
+
+  .mat-button {
+    min-width: unset;
+    padding: 0 8px;
+  }
+
+  img {
+    height: 40px;
+  }
 }
-  
 
-table.candidate {
+/* sidenav */
+sudoku-sidenav {
+  button {
+    width: 100%;
+    text-align: left;
+  }
+
+  button.mat-mdc-button-base {
+    justify-content: flex-start;
+  }
+
+  mat-grid-list button {
+    padding: 0 8px;
+  }
+}
+
+/* grid */
+@mixin strong-border($pos) {
+  border-#{$pos}-width: 3px;
+  border-#{$pos}-style: solid;
+  border-#{$pos}-color: var(--mat-sys-outline-variant);
+}
+
+@mixin faint-border($pos) {
+  border-#{$pos}-width: 1px;
+  border-#{$pos}-style: solid;
+  border-#{$pos}-color: var(--mat-sys-outline-variant);
+}
+
+sudoku-grid {
+  table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  tr.field {
+    @include faint-border(top);
+
+    &.row_1,
+    &.row_4,
+    &.row_7 {
+      @include strong-border(top);
+    }
+
+    &.row_9 {
+      @include strong-border(bottom);
+    }
+  }
+
+  td.field {
+    @include faint-border(left);
+    width: var(--sudoku-cell-size);
+    height: var(--sudoku-cell-size);
+    box-sizing: content-box;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    /* no inline line box, otherwise the cell grows taller than it is wide */
+    line-height: 0;
+    font-size: 0;
+
+    &.col_1,
+    &.col_4,
+    &.col_7 {
+      @include strong-border(left);
+    }
+
+    &.col_9 {
+      @include strong-border(right);
+    }
+  }
+
+  sudoku-candidates {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  td > button.field {
+    /* unset Material Design values */
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+
+    /* to show the selected position when using keys */
+    border-color: transparent;
+    border-style: dotted;
+    border-width: 1px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 1;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 400;
+    font-size: var(--sudoku-grid-digit-size);
+
+    &:not(.initialClue) {
+      @include mat.button-overrides(
+        (
+          text-label-text-color: var(--mat-sys-on-primary-container),
+        )
+      );
+    }
+
+    &.initialClue {
+      @include mat.button-overrides(
+        (
+          text-label-text-color: var(--mat-sys-on-surface-variant),
+        )
+      );
+    }
+  }
+
+  // hides focus, i.e. dotted outline
+  ::-moz-focus-inner {
+    border: 0;
+  }
+
+  :focus {
+    outline: none;
+  }
+}
+
+/* candidates */
+sudoku-candidates {
+  table.candidate {
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
     border: none;
+    border-collapse: collapse;
     border-spacing: 0;
-}  
+    line-height: 80%;
+  }
 
-  
+  tr.candidates {
+    height: calc(var(--sudoku-cell-size) / 3);
+  }
+
+  td.candidate {
+    width: calc(var(--sudoku-cell-size) / 3);
+    height: calc(var(--sudoku-cell-size) / 3);
+    padding: 0;
+    border: none;
+    line-height: 0;
+    font-size: 0;
+  }
+
+  td.candidate > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    line-height: 1;
+    font-size: var(--sudoku-candidate-digit-size);
+    letter-spacing: normal;
+    overflow: hidden;
+  }
+}
+
+/* button bar */
+sudoku-digit {
+  .button-bar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--sudoku-button-gap) 8px;
+    justify-items: center;
+    align-items: center;
+    width: var(--sudoku-button-bar-width);
+    margin: 0 auto;
+  }
+
+  button.digit {
+    margin: 0;
+    min-width: unset;
+    padding: unset;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    width: var(--sudoku-button-size);
+    height: var(--sudoku-button-size);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--sudoku-pad-digit-size);
+    line-height: 1;
+
+    &.candidateDigit {
+      font-size: var(--sudoku-pad-candidate-digit-size);
+    }
+
+    &:hover:enabled {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+    }
+  }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  sudoku-digit .button-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

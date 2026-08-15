@@ -26,7 +26,6 @@ export abstract class GridApp {
 
 @Component({
     selector: 'sudoku-grid',
-    styleUrls: ['./grid.component.scss'],
     standalone: true,
     imports: [CommonModule, MatButtonModule, CandidatesComponent],
     changeDetection: ChangeDetectionStrategy.Eager,

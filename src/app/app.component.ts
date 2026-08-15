@@ -14,8 +14,7 @@ import { DigitComponent } from './digit/digit.component';
     standalone: true,
     imports: [MatSidenavModule, MatToolbarModule, ToolbarComponent, SidenavComponent, GridComponent, DigitComponent],
     templateUrl: './app.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
-    styleUrls: ['./app.component.scss']
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AppComponent implements OnDestroy {
     title = 'sudoku-ng';

@@ -18,7 +18,6 @@ export abstract class DigitApp {
 
 @Component({
     selector: 'sudoku-digit',
-    styleUrls: ['./digit.component.scss'],
     standalone: true,
     imports: [CommonModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.Eager,
