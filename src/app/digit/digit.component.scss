@@ -1,10 +1,10 @@
 .digit-pad {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px 8px;
+  gap: var(--sudoku-pad-gap) 8px;
   justify-items: center;
   align-items: center;
-  width: min(92vw, 520px);
+  width: var(--sudoku-pad-width);
   margin: 0 auto;
 }
 
@@ -27,9 +27,8 @@ button.digit.candidateDigit {
   font-size: var(--sudoku-pad-candidate-digit-size);
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (max-height: 500px) and (orientation: landscape) {
   .digit-pad {
-    width: min(74vw, 560px);
-    gap: 8px 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

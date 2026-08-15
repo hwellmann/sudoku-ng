@@ -5,18 +5,82 @@
 
 :root {
   /* space taken up by the grid borders, which is not available for the cells */
-  --sudoku-grid-border-width: 20px;
-  --sudoku-board-width: min(calc(100vw - 1rem), calc(#{9 * $max-cell-size} + var(--sudoku-grid-border-width)));
-  --sudoku-cell-size: min(
-    calc((var(--sudoku-board-width) - var(--sudoku-grid-border-width)) / 9),
-    7.2vh,
-    #{$max-cell-size}
+  --sudoku-grid-border-width: 18px;
+  --sudoku-viewport-height: 100vh;
+  --sudoku-toolbar-height: 56px;
+  --sudoku-shell-padding: 0.5rem;
+  --sudoku-pad-gap: 6px;
+
+  --sudoku-pad-width: min(calc(100vw - 2 * var(--sudoku-shell-padding)), 520px);
+  --sudoku-pad-button-size: min(calc((var(--sudoku-pad-width) - 4 * 8px) / 5), 56px);
+  /* two rows of buttons plus the row gap and the dock padding */
+  --sudoku-pad-height: calc(2 * var(--sudoku-pad-button-size) + var(--sudoku-pad-gap) + var(--sudoku-shell-padding));
+
+  --sudoku-board-size: max(
+    216px,
+    min(
+      calc(100vw - 2 * var(--sudoku-shell-padding)),
+      calc(
+        var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - var(--sudoku-pad-height) - 2 *
+          var(--sudoku-shell-padding)
+      ),
+      calc(#{9 * $max-cell-size} + var(--sudoku-grid-border-width))
+    )
   );
+  --sudoku-cell-size: calc((var(--sudoku-board-size) - var(--sudoku-grid-border-width)) / 9);
+
   --sudoku-grid-digit-size: calc(var(--sudoku-cell-size) * #{$roboto-to-cell});
   --sudoku-candidate-digit-size: calc(var(--sudoku-cell-size) * 0.26);
-  --sudoku-pad-button-size: calc(var(--sudoku-cell-size) * 1.08);
-  --sudoku-pad-digit-size: calc(var(--sudoku-cell-size) * 0.65);
-  --sudoku-pad-candidate-digit-size: calc(var(--sudoku-cell-size) * 0.4);
+  --sudoku-pad-digit-size: calc(var(--sudoku-pad-button-size) * 0.6);
+  --sudoku-pad-candidate-digit-size: calc(var(--sudoku-pad-button-size) * 0.38);
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --sudoku-viewport-height: 100dvh;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  :root {
+    --sudoku-toolbar-height: 64px;
+    --sudoku-shell-padding: 0.75rem;
+  }
+}
+
+/* landscape phones: the pad moves next to the board, so it costs width instead of height */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --sudoku-pad-button-size: min(
+      calc(
+        (
+            var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - 4 * var(--sudoku-pad-gap) - 2 *
+              var(--sudoku-shell-padding)
+          ) / 5
+      ),
+      48px
+    );
+    --sudoku-pad-width: calc(2 * var(--sudoku-pad-button-size) + 8px);
+    --sudoku-board-size: max(
+      216px,
+      min(
+        calc(100vw - var(--sudoku-pad-width) - 3 * var(--sudoku-shell-padding)),
+        calc(var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - 2 * var(--sudoku-shell-padding)),
+        calc(#{9 * $max-cell-size} + var(--sudoku-grid-border-width))
+      )
+    );
+  }
+}
+
+/*
+ * Preferred sizing: the board simply fills the space its container has left over.
+ * The viewport arithmetic above is only a fallback for browsers without container queries.
+ */
+@supports (container-type: size) and (width: 1cqmin) {
+  sudoku-grid {
+    --sudoku-board-size: min(100cqmin, #{9 * $max-cell-size} + var(--sudoku-grid-border-width));
+    --sudoku-cell-size: calc((var(--sudoku-board-size) - var(--sudoku-grid-border-width)) / 9);
+  }
 }
 
 .mat-simple-snackbar {
@@ -89,6 +153,10 @@ sudoku-grid td.field {
   padding: 0;
   overflow: hidden;
   vertical-align: middle;
+  box-sizing: content-box;
+  /* no inline line box, otherwise the cell grows taller than it is wide */
+  line-height: 0;
+  font-size: 0;
 }
 
 sudoku-grid td.field > button.mat-mdc-button-base,
@@ -108,19 +176,24 @@ sudoku-candidates table.candidate {
 }
 
 sudoku-candidates tr.candidates {
-  height: 33.333%;
+  height: calc(var(--sudoku-cell-size) / 3);
 }
 
 sudoku-candidates td.candidate {
-  width: 33.333%;
-  height: 33.333%;
+  width: calc(var(--sudoku-cell-size) / 3);
+  height: calc(var(--sudoku-cell-size) / 3);
   padding: 0;
   border: none;
+  line-height: 0;
+  font-size: 0;
 }
 
 sudoku-candidates td.candidate > button.mat-mdc-button-base,
 sudoku-candidates td.candidate > button.mat-button,
 sudoku-candidates td.candidate > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
   min-width: 0 !important;
