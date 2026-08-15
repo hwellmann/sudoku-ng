@@ -129,20 +129,27 @@ body {
   }
 }
 
-.mat-simple-snackbar {
-  justify-content: center !important;
+.mat-mdc-snack-bar-label {
+  text-align: center;
+  white-space: pre-line;
 }
 
 .warning {
-  white-space: pre-line;
-  text-align: center;
-  background-color: var(--mat-sys-error);
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--mat-sys-error),
+      supporting-text-color: var(--mat-sys-on-error),
+    )
+  );
 }
 
 .solved {
-  white-space: pre-line;
-  text-align: center;
-  background-color: var(--mat-sys-tertiary);
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--mat-sys-tertiary),
+      supporting-text-color: var(--mat-sys-on-tertiary),
+    )
+  );
 }
 
 tr {
