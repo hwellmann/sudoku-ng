@@ -4,10 +4,19 @@
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 :root {
-  --sudoku-cell-size: clamp(34px, min(#{$cell-size}, 7.2vh), #{$max-cell-size});
+  /* space taken up by the grid borders, which is not available for the cells */
+  --sudoku-grid-border-width: 20px;
+  --sudoku-board-width: min(calc(100vw - 1rem), calc(#{9 * $max-cell-size} + var(--sudoku-grid-border-width)));
+  --sudoku-cell-size: min(
+    calc((var(--sudoku-board-width) - var(--sudoku-grid-border-width)) / 9),
+    7.2vh,
+    #{$max-cell-size}
+  );
   --sudoku-grid-digit-size: calc(var(--sudoku-cell-size) * #{$roboto-to-cell});
+  --sudoku-candidate-digit-size: calc(var(--sudoku-cell-size) * 0.26);
   --sudoku-pad-button-size: calc(var(--sudoku-cell-size) * 1.08);
   --sudoku-pad-digit-size: calc(var(--sudoku-cell-size) * 0.65);
+  --sudoku-pad-candidate-digit-size: calc(var(--sudoku-cell-size) * 0.4);
 }
 
 .mat-simple-snackbar {
@@ -59,7 +68,7 @@ td > button.initialClue {
 }
 
 .candidateDigit {
-  font-size: 12px;
+  font-size: var(--sudoku-pad-candidate-digit-size);
 }
 
 .lastSolvedField {
@@ -118,6 +127,9 @@ sudoku-candidates td.candidate > button {
   min-height: 0 !important;
   padding: 0 !important;
   line-height: 1;
+  font-size: var(--sudoku-candidate-digit-size);
+  letter-spacing: normal;
+  overflow: hidden;
 }
   
 

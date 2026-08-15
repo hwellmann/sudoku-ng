@@ -28,4 +28,7 @@ td.candidate > button.mat-button {
     min-height: 0 !important;
     padding: 0 !important;
     line-height: 1;
+    font-size: var(--sudoku-candidate-digit-size);
+    letter-spacing: normal;
+    overflow: hidden;
 }

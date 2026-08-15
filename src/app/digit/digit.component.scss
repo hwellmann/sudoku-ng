@@ -23,13 +23,13 @@ button.digit {
   line-height: 1;
 }
 
+button.digit.candidateDigit {
+  font-size: var(--sudoku-pad-candidate-digit-size);
+}
+
 @media screen and (min-width: 500px) {
   .digit-pad {
     width: min(74vw, 560px);
     gap: 8px 12px;
-  }
-
-  button.digit.candidateDigit {
-    font-size: clamp(12px, 2.4vmin, 22px);
   }
 }
