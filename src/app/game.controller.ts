@@ -9,6 +9,7 @@ import { Cell, NUM_DIGITS } from './generator/cell';
 import { Sudoku } from './generator/sudoku';
 import { FieldCssClass, GridApp } from './grid/grid.component';
 import { SidenavApp } from './sidenav/sidenav.component';
+import { Action, Move } from './generator/move';
 
 enum State {
     ENTER_GAME,
@@ -24,7 +25,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     private readonly stateSignal = signal(State.PLAY);
     private selectedDigit: number;
     private selectedCell: Cell;
-    private checkpoints: Sudoku[] = [];
+    private moves: Move[] = [];
 
     get sudoku(): Sudoku {
         return this.sudokuState();
@@ -111,6 +112,8 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
             }
         } else if (cell.isCandidate(this.selectedDigit)) {
             //if (cell.solution === this.selectedDigit) {
+                const currentState = new Sudoku(this.sudoku);
+                this.moves.push(new Move(cell.index, this.selectedDigit, Action.SOLVE_CELL, currentState));
                 this.sudoku.setCell(cell.index, this.selectedDigit);
             //}
             if (this.sudoku.isSolved()) {
@@ -217,21 +220,16 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     private addOrRemoveCandidate(candidate: number, cell: Cell) {
         this.log.info('candidate {} clicked in cell {}', candidate, cell.index);
         if (cell.isCandidate(candidate)) {
+            const currentState = new Sudoku(this.sudoku);
+            this.moves.push(new Move(cell.index, this.selectedDigit, Action.REMOVE_CANDIDATE, currentState));
             cell.removeCandidate(candidate);
-        } else {
-            cell.addCandidate(candidate);
         }
     }
 
-    checkpointClicked(): void {
-        this.log.info("checkpoint");
-        this.checkpoints.push(new Sudoku(this.sudoku));
-    }
-
-    revertClicked(): void {
-        this.log.info("revert");
-        if (this.checkpoints.length > 0) {
-            this.sudoku = this.checkpoints.pop()!;
+    undoClicked(): void {
+        if (this.moves.length > 0) {
+            const lastMove = this.moves.pop()!;
+            this.sudoku = lastMove.sudoku;
         }
     }
 }

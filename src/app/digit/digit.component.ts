@@ -1,6 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 export interface DigitCssClass {
     selectedDigit: boolean;
@@ -13,15 +16,14 @@ export abstract class DigitApp {
 
     abstract digitClicked(value: number): void;
     abstract candidatesClicked(): void;
-    abstract checkpointClicked(): void;
-    abstract revertClicked(): void;
+    abstract undoClicked(): void;
     abstract digitCssClass(value: number): DigitCssClass;
 }
 
 @Component({
     selector: 'sudoku-digit',
     standalone: true,
-    imports: [CommonModule, MatButtonModule],
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslateModule],
     changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './digit.component.html',
 })

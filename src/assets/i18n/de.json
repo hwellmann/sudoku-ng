@@ -1,5 +1,7 @@
 {
     "about": "Über",
+    "editCandidates": "Kandidaten bearbeiten",
+    "undo": "Letzten Zug zurücknehmen",
     "newGame": "Neues Spiel",
     "ownGame": "Spiel eingeben"
 }

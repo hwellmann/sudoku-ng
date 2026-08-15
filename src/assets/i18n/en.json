@@ -1,5 +1,7 @@
 {
     "about": "About",
+    "editCandidates": "Edit Candidates",
     "newGame": "New Game",
-    "ownGame": "Enter Game"
+    "ownGame": "Enter Game",
+    "undo": "Undo Last Move"
 }
