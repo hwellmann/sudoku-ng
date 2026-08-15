@@ -1,5 +1,42 @@
+@use "@angular/material" as mat;
+
 /* You can add global styles to this file, and also import other style files */
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
+html {
+  color-scheme: light;
+
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$magenta-palette,
+      ),
+      typography: (
+        plain-family: (
+          Roboto,
+          "Helvetica Neue",
+          sans-serif,
+        ),
+        brand-family: (
+          Roboto,
+          "Helvetica Neue",
+          sans-serif,
+        ),
+      ),
+      density: 0,
+    )
+  );
+
+  /* text buttons default to the primary color in M3, but here they are plain controls */
+  @include mat.button-overrides(
+    (
+      text-label-text-color: var(--mat-sys-on-surface),
+    )
+  );
+}
+
+body {
+  font: var(--mat-sys-body-medium);
+}
 
 :root {
   // space taken up by the grid borders, which is not available for the cells
@@ -99,45 +136,45 @@
 .warning {
   white-space: pre-line;
   text-align: center;
-  background-color: #ef5350;
+  background-color: var(--mat-sys-error);
 }
 
 .solved {
   white-space: pre-line;
   text-align: center;
-  background-color: #ec407a;
+  background-color: var(--mat-sys-tertiary);
 }
 
 tr {
-  border-top-color: rgba(0, 0, 0, 0.2);
+  border-top-color: var(--mat-sys-outline-variant);
 }
 
 tr.row_9 {
-  border-bottom-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: var(--mat-sys-outline-variant);
 }
 
 td {
-  border-left-color: rgba(0, 0, 0, 0.2);
+  border-left-color: var(--mat-sys-outline-variant);
 }
 
 td.col_9 {
-  border-right-color: rgba(0, 0, 0, 0.2);
-}
-
-td > button {
-  color: rgba(0, 0, 0, 0.87);
-}
-
-button.digit:hover:enabled {
-  background-color: rgba(0, 0, 0, 0.04);
+  border-right-color: var(--mat-sys-outline-variant);
 }
 
 td > button.initialClue {
-  color: rgba(0, 0, 0, 0.6) !important;
+  @include mat.button-overrides(
+    (
+      text-label-text-color: var(--mat-sys-on-surface-variant),
+    )
+  );
+}
+
+button.digit:hover:enabled {
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
 }
 
 .selectedDigit {
-  background-color: rgba(63, 81, 181, 0.2) !important;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent) !important;
 }
 
 .candidateDigit {
@@ -145,15 +182,15 @@ td > button.initialClue {
 }
 
 .lastSolvedField {
-  background-color: rgba(63, 81, 181, 0.28) !important;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 28%, transparent) !important;
 }
 
 .onlyOnePossibleDigit {
-  background-color: rgba(236, 64, 122, 0.18) !important;
+  background-color: color-mix(in srgb, var(--mat-sys-tertiary) 18%, transparent) !important;
 }
 
 .groupForLastSolvedField {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
 }
 
 sudoku-grid td.field {
