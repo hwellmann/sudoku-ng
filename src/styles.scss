@@ -1,129 +1,484 @@
-@use "./app/variables" as *;
+@use "@angular/material" as mat;
 
 /* You can add global styles to this file, and also import other style files */
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
+html {
+  color-scheme: light;
 
-:root {
-  --sudoku-cell-size: clamp(34px, min(#{$cell-size}, 7.2vh), #{$max-cell-size});
-  --sudoku-grid-digit-size: calc(var(--sudoku-cell-size) * #{$roboto-to-cell});
-  --sudoku-pad-button-size: calc(var(--sudoku-cell-size) * 1.08);
-  --sudoku-pad-digit-size: calc(var(--sudoku-cell-size) * 0.65);
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$magenta-palette,
+      ),
+      typography: (
+        plain-family: (
+          Roboto,
+          "Helvetica Neue",
+          sans-serif,
+        ),
+        brand-family: (
+          Roboto,
+          "Helvetica Neue",
+          sans-serif,
+        ),
+      ),
+      density: 0,
+    )
+  );
+
+  /* text buttons default to the primary color in M3, but here they are plain controls */
+  @include mat.button-overrides(
+    (
+      text-label-text-color: var(--mat-sys-on-surface),
+    )
+  );
 }
 
-.mat-simple-snackbar {
-  justify-content: center !important;
+body {
+  font: var(--mat-sys-body-medium);
+}
+
+:root {
+  // space taken up by the grid borders, which is not available for the cells
+  // 4 * 3px for the thick borders, 6*1px for the thin borders
+  --sudoku-grid-border-width: 18px;
+  // upper bound for a grid cell, so the board does not get unwieldy on large screens
+  --sudoku-max-cell-size: 58px;
+  --sudoku-max-board-size: calc(9 * var(--sudoku-max-cell-size) + var(--sudoku-grid-border-width));
+  // lower bound, below which the candidates become unreadable
+  --sudoku-min-cell-size: 22px;
+  --sudoku-min-board-size: calc(9 * var(--sudoku-min-cell-size) + var(--sudoku-grid-border-width));
+  // Roboto renders the digits of a solved cell, its glyphs fill 5/8 of the cell
+  --sudoku-roboto-to-cell: 0.625;
+  --sudoku-viewport-height: 100vh;
+  --sudoku-toolbar-height: 56px;
+  --sudoku-shell-padding: 0.5rem;
+  --sudoku-button-gap: 6px;
+
+  --sudoku-button-bar-width: min(calc(100vw - 2 * var(--sudoku-shell-padding)), 520px);
+  --sudoku-button-size: min(calc((var(--sudoku-button-bar-width) - 4 * 8px) / 5), 56px);
+  /* two rows of buttons plus the row gap and the dock padding */
+  --sudoku-button-bar-height: calc(2 * var(--sudoku-button-size) + var(--sudoku-button-gap) + var(--sudoku-shell-padding));
+
+  --sudoku-board-size: max(
+    var(--sudoku-min-board-size),
+    min(
+      calc(100vw - 2 * var(--sudoku-shell-padding)),
+      calc(
+        var(--sudoku-viewport-height) 
+        - var(--sudoku-toolbar-height) 
+        - var(--sudoku-button-bar-height) 
+        - 2 * var(--sudoku-shell-padding)
+      ),
+      var(--sudoku-max-board-size)
+    )
+  );
+  --sudoku-cell-size: calc((var(--sudoku-board-size) - var(--sudoku-grid-border-width)) / 9);
+
+  --sudoku-grid-digit-size: calc(var(--sudoku-cell-size) * var(--sudoku-roboto-to-cell));
+  --sudoku-candidate-digit-size: calc(var(--sudoku-cell-size) * 0.26);
+  --sudoku-pad-digit-size: calc(var(--sudoku-button-size) * 0.6);
+  --sudoku-pad-candidate-digit-size: calc(var(--sudoku-button-size) * 0.38);
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --sudoku-viewport-height: 100dvh;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  :root {
+    --sudoku-toolbar-height: 64px;
+    --sudoku-shell-padding: 0.75rem;
+  }
+}
+
+/* landscape phones: the pad moves next to the board, so it costs width instead of height */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --sudoku-button-size: min(
+      calc(
+        (
+            var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - 4 * var(--sudoku-button-gap) - 2 *
+              var(--sudoku-shell-padding)
+          ) / 5
+      ),
+      48px
+    );
+    --sudoku-button-bar-width: calc(2 * var(--sudoku-button-size) + 8px);
+    --sudoku-board-size: max(
+      var(--sudoku-min-board-size),
+      min(
+        calc(100vw - var(--sudoku-button-bar-width) - 3 * var(--sudoku-shell-padding)),
+        calc(var(--sudoku-viewport-height) - var(--sudoku-toolbar-height) - 2 * var(--sudoku-shell-padding)),
+        var(--sudoku-max-board-size)
+      )
+    );
+  }
+}
+
+/*
+ * Preferred sizing: the board simply fills the space its container has left over.
+ * The viewport arithmetic above is only a fallback for browsers without container queries.
+ */
+@supports (container-type: size) and (width: 1cqmin) {
+  sudoku-grid {
+    --sudoku-board-size: min(100cqmin, var(--sudoku-max-board-size));
+    --sudoku-cell-size: calc((var(--sudoku-board-size) - var(--sudoku-grid-border-width)) / 9);
+  }
+}
+
+.mat-mdc-snack-bar-label {
+  text-align: center;
+  white-space: pre-line;
 }
 
 .warning {
-  white-space: pre-line;
-  text-align: center;
-  background-color: #ef5350;
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--mat-sys-error),
+      supporting-text-color: var(--mat-sys-on-error),
+    )
+  );
 }
 
 .solved {
-  white-space: pre-line;
-  text-align: center;
-  background-color: #ec407a;
+  @include mat.snack-bar-overrides(
+    (
+      container-color: var(--mat-sys-tertiary),
+      supporting-text-color: var(--mat-sys-on-tertiary),
+    )
+  );
 }
 
-tr {
-  border-top-color: rgba(0, 0, 0, 0.2);
-}
-
-tr.row_9 {
-  border-bottom-color: rgba(0, 0, 0, 0.2);
-}
-
-td {
-  border-left-color: rgba(0, 0, 0, 0.2);
-}
-
-td.col_9 {
-  border-right-color: rgba(0, 0, 0, 0.2);
-}
-
-td > button {
-  color: rgba(0, 0, 0, 0.87);
-}
-
-button.digit:hover:enabled {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-td > button.initialClue {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
+/* highlights, used both on grid cells and on button bar buttons */
 .selectedDigit {
-  background-color: rgba(63, 81, 181, 0.2) !important;
-}
-
-.candidateDigit {
-  font-size: 12px;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent) !important;
 }
 
 .lastSolvedField {
-  background-color: rgba(63, 81, 181, 0.28) !important;
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 28%, transparent) !important;
 }
 
 .onlyOnePossibleDigit {
-  background-color: rgba(236, 64, 122, 0.18) !important;
+  background-color: color-mix(in srgb, var(--mat-sys-tertiary) 18%, transparent) !important;
 }
 
 .groupForLastSolvedField {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
 }
 
-sudoku-grid td.field {
-  width: var(--sudoku-cell-size);
-  height: var(--sudoku-cell-size);
-  padding: 0;
-  overflow: hidden;
-  vertical-align: middle;
+/* app shell */
+sudoku-root {
+  .mat-drawer {
+    width: 15em;
+  }
+
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    height: var(--sudoku-viewport-height);
+    overflow: hidden;
+  }
+
+  .top-bar {
+    margin-bottom: 0;
+    flex: none;
+    /* the deprecated color="primary" input has no effect under a Material 3 theme */
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+
+    @include mat.icon-button-overrides(
+      (
+        icon-color: var(--mat-sys-on-primary),
+      )
+    );
+  }
+
+  .board-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sudoku-shell-padding);
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    container-type: size;
+  }
+
+  .digit-dock {
+    display: flex;
+    justify-content: center;
+    flex: none;
+    padding: 0 var(--sudoku-shell-padding) var(--sudoku-shell-padding);
+  }
 }
 
-sudoku-grid td.field > button.mat-mdc-button-base,
-sudoku-grid td.field > button.mat-button {
+@media screen and (min-width: 600px) {
+  sudoku-root .top-bar {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  sudoku-root {
+    .app-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .top-bar {
+      grid-column: 1 / -1;
+      margin-bottom: 0;
+    }
+
+    .board-stage {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .digit-dock {
+      grid-column: 2;
+      grid-row: 2;
+      align-items: center;
+      padding: var(--sudoku-shell-padding) var(--sudoku-shell-padding) var(--sudoku-shell-padding) 0;
+    }
+  }
+}
+
+/* toolbar */
+sudoku-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   width: 100%;
-  height: 100%;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
+
+  h1 {
+    margin: 0;
+    line-height: 1;
+  }
+
+  .mat-button {
+    min-width: unset;
+    padding: 0 8px;
+  }
+
+  img {
+    height: 40px;
+  }
 }
 
-sudoku-candidates table.candidate {
-  width: 100%;
-  height: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
+/* sidenav */
+sudoku-sidenav {
+  button {
+    width: 100%;
+    text-align: left;
+  }
+
+  button.mat-mdc-button-base {
+    justify-content: flex-start;
+  }
+
+  mat-grid-list button {
+    padding: 0 8px;
+  }
 }
 
-sudoku-candidates tr.candidates {
-  height: 33.333%;
+/* grid */
+@mixin strong-border($pos) {
+  border-#{$pos}-width: 3px;
+  border-#{$pos}-style: solid;
+  border-#{$pos}-color: var(--mat-sys-outline-variant);
 }
 
-sudoku-candidates td.candidate {
-  width: 33.333%;
-  height: 33.333%;
-  padding: 0;
-  border: none;
+@mixin faint-border($pos) {
+  border-#{$pos}-width: 1px;
+  border-#{$pos}-style: solid;
+  border-#{$pos}-color: var(--mat-sys-outline-variant);
 }
 
-sudoku-candidates td.candidate > button.mat-mdc-button-base,
-sudoku-candidates td.candidate > button.mat-button,
-sudoku-candidates td.candidate > button {
-  width: 100%;
-  height: 100%;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  line-height: 1;
-}
-  
+sudoku-grid {
+  table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
 
-table.candidate {
+  tr.field {
+    @include faint-border(top);
+
+    &.row_1,
+    &.row_4,
+    &.row_7 {
+      @include strong-border(top);
+    }
+
+    &.row_9 {
+      @include strong-border(bottom);
+    }
+  }
+
+  td.field {
+    @include faint-border(left);
+    width: var(--sudoku-cell-size);
+    height: var(--sudoku-cell-size);
+    box-sizing: content-box;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    /* no inline line box, otherwise the cell grows taller than it is wide */
+    line-height: 0;
+    font-size: 0;
+
+    &.col_1,
+    &.col_4,
+    &.col_7 {
+      @include strong-border(left);
+    }
+
+    &.col_9 {
+      @include strong-border(right);
+    }
+  }
+
+  sudoku-candidates {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  td > button.field {
+    /* unset Material Design values */
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+
+    /* to show the selected position when using keys */
+    border-color: transparent;
+    border-style: dotted;
+    border-width: 1px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 1;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 400;
+    font-size: var(--sudoku-grid-digit-size);
+
+    &:not(.initialClue) {
+      @include mat.button-overrides(
+        (
+          text-label-text-color: var(--mat-sys-on-primary-container),
+        )
+      );
+    }
+
+    &.initialClue {
+      @include mat.button-overrides(
+        (
+          text-label-text-color: var(--mat-sys-on-surface-variant),
+        )
+      );
+    }
+  }
+
+  // hides focus, i.e. dotted outline
+  ::-moz-focus-inner {
+    border: 0;
+  }
+
+  :focus {
+    outline: none;
+  }
+}
+
+/* candidates */
+sudoku-candidates {
+  table.candidate {
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
     border: none;
+    border-collapse: collapse;
     border-spacing: 0;
-}  
+    line-height: 80%;
+  }
 
-  
+  tr.candidates {
+    height: calc(var(--sudoku-cell-size) / 3);
+  }
+
+  td.candidate {
+    width: calc(var(--sudoku-cell-size) / 3);
+    height: calc(var(--sudoku-cell-size) / 3);
+    padding: 0;
+    border: none;
+    line-height: 0;
+    font-size: 0;
+  }
+
+  td.candidate > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    line-height: 1;
+    font-size: var(--sudoku-candidate-digit-size);
+    letter-spacing: normal;
+    overflow: hidden;
+  }
+}
+
+/* button bar */
+sudoku-digit {
+  .button-bar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--sudoku-button-gap) 8px;
+    justify-items: center;
+    align-items: center;
+    width: var(--sudoku-button-bar-width);
+    margin: 0 auto;
+  }
+
+  button.digit {
+    margin: 0;
+    min-width: unset;
+    padding: unset;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    width: var(--sudoku-button-size);
+    height: var(--sudoku-button-size);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--sudoku-pad-digit-size);
+    line-height: 1;
+
+    &.candidateDigit {
+      font-size: var(--sudoku-pad-candidate-digit-size);
+    }
+
+    &:hover:enabled {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 4%, transparent);
+    }
+  }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  sudoku-digit .button-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

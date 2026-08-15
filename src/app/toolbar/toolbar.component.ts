@@ -18,7 +18,6 @@ export abstract class ToolbarApp {
 
 @Component({
     selector: 'sudoku-toolbar',
-    styleUrls: ['./toolbar.component.scss'],
     standalone: true,
     imports: [MatButtonModule, MatIconModule, MatTooltipModule],
     changeDetection: ChangeDetectionStrategy.Eager,

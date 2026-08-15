@@ -20,7 +20,6 @@ export abstract class SidenavApp {
 
 @Component({
     selector: 'sudoku-sidenav',
-    styleUrls: ['./sidenav.component.scss'],
     standalone: true,
     imports: [MatButtonModule, MatIconModule, TranslateModule],
     changeDetection: ChangeDetectionStrategy.Eager,

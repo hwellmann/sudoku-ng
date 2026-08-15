@@ -11,7 +11,6 @@ export abstract class CandidatesApp {
 
 @Component({
     selector: 'sudoku-candidates',
-    styleUrls: ['./candidates.component.scss'],
     standalone: true,
     imports: [CommonModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.Eager,
