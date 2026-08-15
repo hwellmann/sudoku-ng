@@ -24,6 +24,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     private readonly stateSignal = signal(State.PLAY);
     private selectedDigit: number;
     private selectedCell: Cell;
+    private checkpoints: Sudoku[] = [];
 
     get sudoku(): Sudoku {
         return this.sudokuState();
@@ -109,9 +110,9 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
                 this.sudoku.setCell(cell.index, this.selectedDigit);
             }
         } else if (cell.isCandidate(this.selectedDigit)) {
-            if (cell.solution === this.selectedDigit) {
+            //if (cell.solution === this.selectedDigit) {
                 this.sudoku.setCell(cell.index, this.selectedDigit);
-            }
+            //}
             if (this.sudoku.isSolved()) {
                 this.openSnackBar('solved', 'Solved!');
             }
@@ -219,6 +220,18 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
             cell.removeCandidate(candidate);
         } else {
             cell.addCandidate(candidate);
+        }
+    }
+
+    checkpointClicked(): void {
+        this.log.info("checkpoint");
+        this.checkpoints.push(new Sudoku(this.sudoku));
+    }
+
+    revertClicked(): void {
+        this.log.info("revert");
+        if (this.checkpoints.length > 0) {
+            this.sudoku = this.checkpoints.pop()!;
         }
     }
 }

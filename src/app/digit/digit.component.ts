@@ -13,6 +13,8 @@ export abstract class DigitApp {
 
     abstract digitClicked(value: number): void;
     abstract candidatesClicked(): void;
+    abstract checkpointClicked(): void;
+    abstract revertClicked(): void;
     abstract digitCssClass(value: number): DigitCssClass;
 }
 
