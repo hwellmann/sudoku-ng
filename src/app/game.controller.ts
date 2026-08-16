@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Logger, getLogger } from '@log4js2/core';
 import { CandidatesApp } from './candidates/candidates.component';
@@ -12,6 +13,7 @@ import { FieldCssClass, GridApp } from './grid/grid.component';
 import { SidenavApp } from './sidenav/sidenav.component';
 import { Action, Move } from './generator/move';
 import { APP_VERSION } from '../version';
+import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 
 enum State {
     ENTER_GAME,
@@ -35,7 +37,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
 
     private readonly log: Logger = getLogger('GameController');
 
-    constructor(public snackBar: MatSnackBar, private translate: TranslateService) {
+    constructor(public snackBar: MatSnackBar, private translate: TranslateService, private dialog: MatDialog) {
         this.asyncGenerator = new AsyncGenerator(
             sudoku => this.newGameGenerated(sudoku),
             () => this.newGameFailed()
@@ -77,6 +79,29 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         this.log.info('own game');
         this.sudoku = new Sudoku();
         this.state = State.ENTER_GAME;
+    }
+
+    importGame(): void {
+        this.log.info('import game');
+        this.dialog.open(ImportDialogComponent)
+            .afterClosed()
+            .subscribe(text => this.importGameText(text));
+    }
+
+    private importGameText(text: string | null | undefined): void {
+        if (text === null || text === undefined) {
+            return;
+        }
+        try {
+            this.sudoku = Sudoku.fromString(text);
+            this.state = State.PLAY;
+            this.selectedDigit = undefined;
+            this.selectedCell = undefined;
+            this.moves = [];
+        } catch (error) {
+            this.log.warn('failed to import game', error);
+            this.openSnackBar('warning', 'invalidGame');
+        }
     }
 
     resetGame(): void {

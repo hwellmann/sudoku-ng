@@ -14,6 +14,7 @@ export abstract class SidenavApp {
 
     abstract newGame(): void;
     abstract ownGame(): void;
+    abstract importGame(): void;
     abstract resetGame(): void;
 
     abstract about(): void;

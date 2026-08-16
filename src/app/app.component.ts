@@ -3,6 +3,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { GameController } from './game.controller';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
@@ -12,7 +13,7 @@ import { DigitComponent } from './digit/digit.component';
 @Component({
     selector: 'sudoku-root',
     standalone: true,
-    imports: [MatSidenavModule, MatToolbarModule, ToolbarComponent, SidenavComponent, GridComponent, DigitComponent],
+    imports: [MatSidenavModule, MatDialogModule, MatToolbarModule, ToolbarComponent, SidenavComponent, GridComponent, DigitComponent],
     templateUrl: './app.component.html',
     changeDetection: ChangeDetectionStrategy.Eager
 })

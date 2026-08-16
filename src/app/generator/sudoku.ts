@@ -145,6 +145,9 @@ export class Sudoku {
         if (c === '.') {
             return 0;
         }
+        if (!'123456789'.includes(c)) {
+            throw new Error(`expected one of '.123456789', actual: ${c}`);
+        }
         return Number(c);
     }
 

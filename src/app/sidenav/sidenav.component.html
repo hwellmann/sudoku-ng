@@ -6,6 +6,10 @@
     <mat-icon>edit</mat-icon>
     {{ 'ownGame' | translate }}
 </button>
+<button mat-button (click)="app.importGame()">
+    <mat-icon>file_open</mat-icon>
+    {{ 'importGame' | translate }}
+</button>
 <button mat-button (click)="app.resetGame()">
     <mat-icon>refresh</mat-icon>
     {{ 'resetGame' | translate }}

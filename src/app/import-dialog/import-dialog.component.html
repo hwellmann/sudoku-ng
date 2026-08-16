@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ "importGame" | translate }}</h2>
+<mat-dialog-content>
+  <mat-form-field class="full-width">
+    <mat-label>{{ "importGameInput" | translate }}</mat-label>
+    <input matInput [(ngModel)]="text" maxlength="81" autofocus />
+    <mat-hint>{{ "importGameHint" | translate }}</mat-hint>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="null">
+    {{ "cancel" | translate }}
+  </button>
+  <button mat-flat-button [mat-dialog-close]="text">
+    {{ "importGame" | translate }}
+  </button>
+</mat-dialog-actions>
