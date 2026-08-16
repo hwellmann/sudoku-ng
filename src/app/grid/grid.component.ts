@@ -1,10 +1,9 @@
-import { Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
-import { Sudoku } from 'app/generator/sudoku';
-import { Cell } from 'app/generator/cell';
-import { Logger, getLogger } from '@log4js2/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { Logger, getLogger } from '@log4js2/core';
 import { CandidatesComponent } from '../candidates/candidates.component';
+import { Cell } from '../generator/cell';
 
 export interface FieldCssClass {
     field: boolean;
@@ -17,7 +16,6 @@ export interface FieldCssClass {
 }
 
 export abstract class GridApp {
-    sudoku: Sudoku;
     abstract fieldClicked(row: number, col: number): void;
     abstract getField(row: number, col: number): Cell;
     abstract fieldCssClass(row: number, col: number): FieldCssClass;

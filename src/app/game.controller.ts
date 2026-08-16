@@ -21,18 +21,30 @@ enum State {
 export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
     isUserDefined: boolean;
 
-    private readonly sudokuState = signal(new Sudoku());
+    private readonly sudokuSignal = signal(new Sudoku());
     private readonly stateSignal = signal(State.PLAY);
     private selectedDigit: number;
     private selectedCell: Cell;
     private moves: Move[] = [];
 
-    get sudoku(): Sudoku {
-        return this.sudokuState();
+
+    private asyncGenerator: AsyncGenerator;
+    private solver: BacktrackingSolver = new BacktrackingSolver();
+
+    private readonly log: Logger = getLogger('GameController');
+
+    constructor(public snackBar: MatSnackBar) {
+        this.asyncGenerator = new AsyncGenerator(
+            sudoku => this.newGameGenerated(sudoku),
+            () => this.newGameFailed()
+        );
+    }
+    private get sudoku(): Sudoku {
+        return this.sudokuSignal();
     }
 
-    set sudoku(value: Sudoku) {
-        this.sudokuState.set(value);
+    private set sudoku(value: Sudoku) {
+        this.sudokuSignal.set(value);
     }
 
     private get state(): State {
@@ -43,21 +55,15 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         this.stateSignal.set(value);
     }
 
-    private asyncGenerator: AsyncGenerator;
-    private solver: BacktrackingSolver = new BacktrackingSolver();
+    private newGameGenerated(sudoku: Sudoku): void {
+        this.sudoku = sudoku;
+        this.state = State.PLAY;
+        this.selectedDigit = undefined;
+        this.moves = [];
+    }
 
-    private readonly log: Logger = getLogger('GameController');
-
-    constructor(public snackBar: MatSnackBar) {
-        this.asyncGenerator = new AsyncGenerator(
-            (sudoku) => {
-                this.sudoku = sudoku;
-                this.state = State.PLAY;
-            },
-            () => {
-                this.openSnackBar('warning', 'Failed to generate a new Sudoku');
-            }
-        );
+    private newGameFailed(): void {
+        this.openSnackBar('warning', 'Failed to generate a new Sudoku');
     }
 
     newGame(): void {
@@ -111,11 +117,9 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
                 this.sudoku.setCell(cell.index, this.selectedDigit);
             }
         } else if (cell.isCandidate(this.selectedDigit)) {
-            //if (cell.solution === this.selectedDigit) {
-                const currentState = new Sudoku(this.sudoku);
-                this.moves.push(new Move(cell.index, this.selectedDigit, Action.SOLVE_CELL, currentState));
-                this.sudoku.setCell(cell.index, this.selectedDigit);
-            //}
+            const currentState = new Sudoku(this.sudoku);
+            this.moves.push(new Move(cell.index, this.selectedDigit, Action.SOLVE_CELL, currentState));
+            this.sudoku.setCell(cell.index, this.selectedDigit);
             if (this.sudoku.isSolved()) {
                 this.openSnackBar('solved', 'Solved!');
             }
