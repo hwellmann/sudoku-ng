@@ -26,6 +26,7 @@ export class GameController {
     private selectedDigitValue: number;
     private selectedCellValue: Cell;
     private moves: Move[] = [];
+    private keyboardCellIndex = 0;
 
 
     private asyncGenerator: AsyncGenerator;
@@ -114,6 +115,8 @@ export class GameController {
             this.log.info('own game');
             this.sudoku = new Sudoku();
             this.state = State.ENTER_GAME;
+            this.keyboardCellIndex = 0;
+            this.selectedCellValue = this.sudoku.cells[0];
         });
     }
 
@@ -189,6 +192,10 @@ export class GameController {
                 this.sudoku.clearCell(cell.index);
                 this.sudoku.setCell(cell.index, this.selectedDigitValue);
             }
+            if (cell.isFilled()) {
+                this.keyboardCellIndex = cell.index + 1;
+                this.selectedCellValue = this.sudoku.cells[this.keyboardCellIndex];
+            }
         } else if (cell.isCandidate(this.selectedDigitValue)) {
             const currentState = new Sudoku(this.sudoku);
             this.moves.push(new Move(cell.index, this.selectedDigitValue, Action.SOLVE_CELL, currentState));
@@ -248,6 +255,51 @@ export class GameController {
         this.selectedDigitValue = candidate;
         this.cellClicked(cell);
         this.selectedDigitValue = oldSelectedDigit;
+    }
+
+    keyPressed(key: string): boolean {
+        if (this.state === State.ENTER_GAME) {
+            if (key === '.' || key === ' ') {
+                return this.skipKeyboardCell();
+            }
+            if (/^[1-9]$/.test(key)) {
+                const cell = this.sudoku.cells[this.keyboardCellIndex];
+                if (cell === undefined) {
+                    return false;
+                }
+                this.digitClicked(Number(key));
+                this.cellClicked(cell);
+                return true;
+            }
+            return false;
+        }
+
+        if (/^[1-9]$/.test(key)) {
+            this.digitClicked(Number(key));
+            return true;
+        }
+        if (key.toUpperCase() === 'C') {
+            this.candidatesClicked();
+            return true;
+        }
+        if (key.toUpperCase() === 'U') {
+            this.undoClicked();
+            return true;
+        }
+        return false;
+    }
+
+    private skipKeyboardCell(): boolean {
+        if (this.keyboardCellIndex >= this.sudoku.cells.length) {
+            return false;
+        }
+        this.selectNextKeyboardCell();
+        return true;
+    }
+
+    private selectNextKeyboardCell(): void {
+        this.keyboardCellIndex++;
+        this.selectedCellValue = this.sudoku.cells[this.keyboardCellIndex];
     }
 
     private addOrRemoveCandidate(candidate: number, cell: Cell) {

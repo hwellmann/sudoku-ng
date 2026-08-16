@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, HostListener, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { GameController } from './game.controller';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,6 +27,18 @@ export class AppComponent implements OnDestroy {
         const browserLang = this.translate.getBrowserLang();
         const currentLanguage = this.supportedLanguages.includes(browserLang ?? '') ? browserLang! : 'en';
         this.translate.use(currentLanguage);
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    onKeyPressed(event: KeyboardEvent): void {
+        const target = event.target;
+        if (target instanceof HTMLElement && target.closest('input, textarea, select, [contenteditable="true"], [role="dialog"]')) {
+            return;
+        }
+        const key = event.code === 'Space' ? ' ' : event.key;
+        if (this.game.keyPressed(key)) {
+            event.preventDefault();
+        }
     }
 
     ngOnDestroy() {
