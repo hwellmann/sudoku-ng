@@ -79,6 +79,15 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         this.state = State.ENTER_GAME;
     }
 
+    resetGame(): void {
+        this.log.info('reset game');
+        if (this.moves.length > 0) {
+            const firstMove = this.moves[0];
+            this.sudoku = firstMove.sudoku;
+            this.moves = [];
+        }
+    }
+
     onDestroy(): void {
         this.asyncGenerator.onDestroy();
     }

@@ -6,6 +6,10 @@
     <mat-icon>edit</mat-icon>
     {{ 'ownGame' | translate }}
 </button>
+<button mat-button (click)="app.resetGame()">
+    <mat-icon>refresh</mat-icon>
+    {{ 'resetGame' | translate }}
+</button>
 <hr>
 
 <button mat-button (click)="app.about()">

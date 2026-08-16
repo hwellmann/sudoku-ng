@@ -8,5 +8,6 @@
     "aboutNotice": "Sudoku-NG version {{version}} ({{date}})",
     "solved": "Solved!",
     "noSolution": "This Sudoku has no solution",
-    "multipleSolutions": "This Sudoku has more than one solution"
+    "multipleSolutions": "This Sudoku has more than one solution",
+    "resetGame": "Reset Game"
 }
