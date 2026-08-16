@@ -8,6 +8,8 @@
     "importGameHint": "81 characters; use . for empty cells",
     "invalidGame": "Invalid Sudoku string",
     "cancel": "Cancel",
+    "confirm": "Continue",
+    "confirmDiscardGame": "The current game is still in progress and will be lost. Do you want to continue?",
     "undo": "Undo Last Move",
     "generationFailed": "Failed to generate a new Sudoku",
     "aboutNotice": "Sudoku-NG version {{version}} ({{date}})",

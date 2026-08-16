@@ -10,6 +10,7 @@ import { Sudoku } from './generator/sudoku';
 import { Action, Move } from './generator/move';
 import { APP_VERSION } from '../version';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 enum State {
     ENTER_GAME,
@@ -82,22 +83,47 @@ export class GameController {
         this.openSnackBar('warning', 'generationFailed');
     }
 
+    get isGameInProgress(): boolean {
+        return this.moves.length > 0 && !this.sudoku.isSolved();
+    }
+
+    /** Runs the action directly, or after user confirmation if a game is in progress. */
+    private confirmed(titleKey: string, action: () => void): void {
+        if (!this.isGameInProgress) {
+            action();
+            return;
+        }
+        this.dialog.open(ConfirmDialogComponent, { data: { titleKey } })
+            .afterClosed()
+            .subscribe(confirmed => {
+                if (confirmed) {
+                    action();
+                }
+            });
+    }
+
     newGame(): void {
-        this.log.info('new game');
-        this.asyncGenerator.generateSolvedSudoku('medium');
+        this.confirmed('newGame', () => {
+            this.log.info('new game');
+            this.asyncGenerator.generateSolvedSudoku('medium');
+        });
     }
 
     ownGame(): void {
-        this.log.info('own game');
-        this.sudoku = new Sudoku();
-        this.state = State.ENTER_GAME;
+        this.confirmed('ownGame', () => {
+            this.log.info('own game');
+            this.sudoku = new Sudoku();
+            this.state = State.ENTER_GAME;
+        });
     }
 
     importGame(): void {
-        this.log.info('import game');
-        this.dialog.open(ImportDialogComponent)
-            .afterClosed()
-            .subscribe(text => this.importGameText(text));
+        this.confirmed('importGame', () => {
+            this.log.info('import game');
+            this.dialog.open(ImportDialogComponent)
+                .afterClosed()
+                .subscribe(text => this.importGameText(text));
+        });
     }
 
     private importGameText(text: string | null | undefined): void {
@@ -117,12 +143,14 @@ export class GameController {
     }
 
     resetGame(): void {
-        this.log.info('reset game');
-        if (this.moves.length > 0) {
-            const firstMove = this.moves[0];
-            this.sudoku = firstMove.sudoku;
-            this.moves = [];
-        }
+        this.confirmed('resetGame', () => {
+            this.log.info('reset game');
+            if (this.moves.length > 0) {
+                const firstMove = this.moves[0];
+                this.sudoku = firstMove.sudoku;
+                this.moves = [];
+            }
+        });
     }
 
     onDestroy(): void {
