@@ -11,6 +11,7 @@ import { Sudoku } from './generator/sudoku';
 import { FieldCssClass, GridApp } from './grid/grid.component';
 import { SidenavApp } from './sidenav/sidenav.component';
 import { Action, Move } from './generator/move';
+import { APP_VERSION } from '../version';
 
 enum State {
     ENTER_GAME,
@@ -83,17 +84,20 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     }
 
     about(): void {
-        this.log.info('about game');
-        this.openSnackBar('solved', 'aboutNotice');
+        this.log.info(`about game, version ${APP_VERSION.version}, commit ${APP_VERSION.commit}`);
+        this.openSnackBar('solved', 'aboutNotice', {
+            version: APP_VERSION.version,
+            date: APP_VERSION.timestamp.slice(0, 10)
+        });
     }
 
-    private openSnackBar(cssClass: string, messageKey: string): void {
+    private openSnackBar(cssClass: string, messageKey: string, params?: object): void {
         const config = new MatSnackBarConfig();
         config.verticalPosition = 'bottom';
         config.horizontalPosition = 'center';
         config.duration = 3000;
         config.panelClass = [cssClass];
-        this.snackBar.open(this.translate.instant(messageKey), undefined, config);
+        this.snackBar.open(this.translate.instant(messageKey, params), undefined, config);
     }
 
     fieldClicked(row: number, col: number): void {

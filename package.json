@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "gen-version": "node scripts/gen-version.mjs",
+    "prestart": "npm run gen-version",
     "start": "ng serve",
+    "prebuild": "npm run gen-version",
     "build": "ng build",
     "test": "vitest run",
     "test:watch": "vitest"

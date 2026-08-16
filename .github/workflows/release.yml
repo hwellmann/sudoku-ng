@@ -1,11 +1,14 @@
 name: Release
 
 on:
-  push:
-    tags:
-    - '**'
-    branches:
-    - none
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, e.g. 1.2.0'
+        required: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -19,9 +22,14 @@ jobs:
       with:
         node-version: 22.22.3
         cache: npm
+    - name: Set version
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        npm version "${{ inputs.version }}" -m 'Release v%s'
+        git push --follow-tags
     - name: Build
       run: |
-        echo ${GITHUB_REF}
         npm ci
         npm run build
 

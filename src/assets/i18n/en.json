@@ -5,7 +5,7 @@
     "ownGame": "Enter Game",
     "undo": "Undo Last Move",
     "generationFailed": "Failed to generate a new Sudoku",
-    "aboutNotice": "This is just a silly notice.",
+    "aboutNotice": "Sudoku-NG version {{version}} ({{date}})",
     "solved": "Solved!",
     "noSolution": "This Sudoku has no solution",
     "multipleSolutions": "This Sudoku has more than one solution"
