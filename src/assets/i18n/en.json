@@ -3,5 +3,10 @@
     "editCandidates": "Edit Candidates",
     "newGame": "New Game",
     "ownGame": "Enter Game",
-    "undo": "Undo Last Move"
+    "undo": "Undo Last Move",
+    "generationFailed": "Failed to generate a new Sudoku",
+    "aboutNotice": "This is just a silly notice.",
+    "solved": "Solved!",
+    "noSolution": "This Sudoku has no solution",
+    "multipleSolutions": "This Sudoku has more than one solution"
 }

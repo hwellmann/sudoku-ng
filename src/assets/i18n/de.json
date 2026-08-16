@@ -3,5 +3,10 @@
     "editCandidates": "Kandidaten bearbeiten",
     "undo": "Letzten Zug zurücknehmen",
     "newGame": "Neues Spiel",
-    "ownGame": "Spiel eingeben"
+    "ownGame": "Spiel eingeben",
+    "generationFailed": "Fehler beim Erzeugen eines neuen Sudokus",
+    "aboutNotice": "Das ist nur ein kleiner Hinweis.",
+    "solved": "Geschafft!",
+    "noSolution": "Dieses Sudoku hat keine Lösung",
+    "multipleSolutions": "Dieses Sudoku hat mehr als eine Lösung"
 }

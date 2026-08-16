@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { Logger, getLogger } from '@log4js2/core';
 import { CandidatesApp } from './candidates/candidates.component';
 import { DigitApp, DigitCssClass } from './digit/digit.component';
@@ -33,7 +34,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
 
     private readonly log: Logger = getLogger('GameController');
 
-    constructor(public snackBar: MatSnackBar) {
+    constructor(public snackBar: MatSnackBar, private translate: TranslateService) {
         this.asyncGenerator = new AsyncGenerator(
             sudoku => this.newGameGenerated(sudoku),
             () => this.newGameFailed()
@@ -63,7 +64,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     }
 
     private newGameFailed(): void {
-        this.openSnackBar('warning', 'Failed to generate a new Sudoku');
+        this.openSnackBar('warning', 'generationFailed');
     }
 
     newGame(): void {
@@ -83,16 +84,16 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
 
     about(): void {
         this.log.info('about game');
-        this.openSnackBar('solved', 'This is just a silly notice.');
+        this.openSnackBar('solved', 'aboutNotice');
     }
 
-    private openSnackBar(cssClass: string, message: string) {
+    private openSnackBar(cssClass: string, messageKey: string): void {
         const config = new MatSnackBarConfig();
         config.verticalPosition = 'bottom';
         config.horizontalPosition = 'center';
         config.duration = 3000;
         config.panelClass = [cssClass];
-        this.snackBar.open(message, undefined, config);
+        this.snackBar.open(this.translate.instant(messageKey), undefined, config);
     }
 
     fieldClicked(row: number, col: number): void {
@@ -121,7 +122,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
             this.moves.push(new Move(cell.index, this.selectedDigit, Action.SOLVE_CELL, currentState));
             this.sudoku.setCell(cell.index, this.selectedDigit);
             if (this.sudoku.isSolved()) {
-                this.openSnackBar('solved', 'Solved!');
+                this.openSnackBar('solved', 'solved');
             }
         }
     }
@@ -141,9 +142,9 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
             const solutions = this.solver.solve(puzzle);
             solutions.forEach(s => this.log.info(s.asString()));
             if (solutions.length === 0) {
-                this.openSnackBar('warning', 'This Sudoku has no solution');
+                this.openSnackBar('warning', 'noSolution');
             } else if (solutions.length > 1) {
-                this.openSnackBar('warning', 'This Sudoku has more than one solution');
+                this.openSnackBar('warning', 'multipleSolutions');
             }
             const solution = solutions[0];
             for (const solutionCell of solution.cells) {
@@ -177,8 +178,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         return {
             field: true,
             initialClue: cell.given,
-            groupForLastSolvedField: this.selectedDigit && cell.isCandidate(this.selectedDigit) && this.state !== State.ENTER_GAME,
-            lastSolvedField: false,
+            selectedDigitCandidate: this.selectedDigit && cell.isCandidate(this.selectedDigit) && this.state !== State.ENTER_GAME,
             onlyOnePossibleDigit: cell.candidates.getCardinality() === 1,
             selectedDigit: this.selectedDigit === cell.value,
             selectedPosition: this.selectedCell && this.selectedCell.index === cell.index
@@ -198,7 +198,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
             classes.push('selectedPosition');
         }
         if (this.selectedDigit && this.state !== State.ENTER_GAME && cell.isCandidate(this.selectedDigit)) {
-            classes.push('groupForLastSolvedField');
+            classes.push('selectedDigitCandidate');
         }
         return classes.join(' ');
     }

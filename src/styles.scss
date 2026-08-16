@@ -157,15 +157,11 @@ body {
   background-color: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent) !important;
 }
 
-.lastSolvedField {
-  background-color: color-mix(in srgb, var(--mat-sys-primary) 28%, transparent) !important;
-}
-
 .onlyOnePossibleDigit {
   background-color: color-mix(in srgb, var(--mat-sys-tertiary) 18%, transparent) !important;
 }
 
-.groupForLastSolvedField {
+.selectedDigitCandidate {
   background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
 }
 

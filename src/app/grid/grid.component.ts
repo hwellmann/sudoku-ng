@@ -9,8 +9,7 @@ export interface FieldCssClass {
     field: boolean;
     initialClue: boolean;
     selectedPosition: boolean;
-    lastSolvedField: boolean;
-    groupForLastSolvedField: boolean;
+    selectedDigitCandidate: boolean;
     selectedDigit: boolean;
     onlyOnePossibleDigit: boolean;
 }
