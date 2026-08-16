@@ -1,6 +1,7 @@
 import '@angular/compiler';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { GameController } from './game.controller';
+import { BacktrackingGenerator } from './generator/backtracking-generator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -90,5 +91,52 @@ describe('GameController keyboard entry', () => {
         expect(controller.selectedCell).toBeUndefined();
         expect(controller.keyPressed('.')).toBe(false);
         expect(controller.keyPressed('1')).toBe(false);
+    });
+});
+
+describe('GameController generated game', () => {
+    let controller: GameController;
+
+    beforeEach(() => {
+        const snackBar: Partial<MatSnackBar> = {
+            open: vi.fn()
+        };
+        const translate: Partial<TranslateService> = {
+            instant: vi.fn((key: string) => key)
+        };
+        const dialog: Partial<MatDialog> = {
+            open: vi.fn()
+        };
+
+        controller = new GameController(
+            snackBar as MatSnackBar,
+            translate as TranslateService,
+            dialog as MatDialog
+        );
+        controller.ownGame();
+    });
+
+    afterEach(() => controller.onDestroy());
+
+    test('generates and plays a complete game', () => {
+        const puzzle = new BacktrackingGenerator().generatePuzzle();
+
+        for (const cell of puzzle.cells) {
+            controller.keyPressed(cell.isFilled() ? String(cell.value) : '.');
+        }
+
+        controller.candidatesClicked();
+
+        expect(controller.isEnterGameMode).toBe(false);
+        expect(controller.sudoku.solutionAsString).toBe(puzzle.solutionAsString);
+
+        for (const cell of controller.sudoku.cells) {
+            if (cell.isEmpty()) {
+                controller.digitClicked(cell.solution);
+                controller.cellClicked(cell);
+            }
+        }
+
+        expect(controller.sudoku.isSolved()).toBe(true);
     });
 });
