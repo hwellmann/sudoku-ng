@@ -7,8 +7,8 @@ html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$blue-palette,
-        tertiary: mat.$magenta-palette,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
       ),
       typography: (
         plain-family: (
