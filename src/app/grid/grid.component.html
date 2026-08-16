@@ -1,13 +1,15 @@
 <table #grid (keyup)="onTableKeyup($event)">
     <tr *ngFor="let row of [1, 2, 3, 4, 5, 6, 7, 8, 9]" class="field row_{{row}}">
         <td *ngFor="let col of [1, 2, 3, 4, 5, 6, 7, 8, 9]" 
-            class="field col_{{col}} {{app.fieldCssClasses(row, col)}}">
-            <ng-container *ngIf="app.getField(row, col) as cell">
-                <button mat-button *ngIf="cell.isFilled()" (click)="app.fieldClicked(row, col)"
-                    [ngClass]="app.fieldCssClass(row, col)">
+            class="field col_{{col}} {{fieldCssClasses(getField(row, col))}}">
+            <ng-container *ngIf="getField(row, col) as cell">
+                <button mat-button *ngIf="cell.isFilled()" (click)="onFieldClicked(cell)"
+                    [ngClass]="fieldCssClass(cell)">
                     {{ cell.value || '&nbsp;' }}
                 </button>
-                <sudoku-candidates *ngIf="cell.isEmpty()" [cell]="cell"></sudoku-candidates>
+                <sudoku-candidates *ngIf="cell.isEmpty()" [cell]="cell"
+                    (candidateClicked)="onCandidateClicked(cell, $event)"
+                    (candidateRightClicked)="onCandidateRightClicked(cell, $event)"></sudoku-candidates>
             </ng-container>
         </td>
     </tr>

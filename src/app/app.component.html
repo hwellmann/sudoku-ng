@@ -1,6 +1,11 @@
 <mat-sidenav-container fullscreen>
     <mat-sidenav #sidenav (click)="sidenav.toggle()">
-        <sudoku-sidenav></sudoku-sidenav>
+        <sudoku-sidenav
+            (newGame)="game.newGame()"
+            (ownGame)="game.ownGame()"
+            (importGame)="game.importGame()"
+            (resetGame)="game.resetGame()"
+            (about)="game.about()"></sudoku-sidenav>
     </mat-sidenav>
     <mat-sidenav-content class="app-shell">
         <mat-toolbar color="primary" class="top-bar">
@@ -8,11 +13,24 @@
         </mat-toolbar>
 
         <main class="board-stage">
-            <sudoku-grid></sudoku-grid>
+            <sudoku-grid
+                [sudoku]="game.sudoku"
+                [selectedDigit]="game.selectedDigit"
+                [selectedCell]="game.selectedCell"
+                [enterGameMode]="game.isEnterGameMode"
+                (fieldClicked)="game.cellClicked($event)"
+                (candidateClicked)="game.candidateClicked($event.cell, $event.candidate)"
+                (candidateRightClicked)="game.candidateRightClicked($event.cell, $event.candidate)"></sudoku-grid>
         </main>
 
         <footer class="digit-dock">
-            <sudoku-digit></sudoku-digit>
+            <sudoku-digit
+                [sudoku]="game.sudoku"
+                [selectedDigit]="game.selectedDigit"
+                [candidateMode]="game.isCandidateMode"
+                (digitClicked)="game.digitClicked($event)"
+                (candidatesClicked)="game.candidatesClicked()"
+                (undoClicked)="game.undoClicked()"></sudoku-digit>
         </footer>
     </mat-sidenav-content>
 </mat-sidenav-container>

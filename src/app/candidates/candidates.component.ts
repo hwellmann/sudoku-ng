@@ -1,13 +1,7 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Cell } from 'app/generator/cell';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-
-export abstract class CandidatesApp {
-    abstract candidateClicked(cell: Cell, candidate: number): void;
-    abstract candidateRightClicked(cell: Cell, candidate: number): void;
-}
-
 
 @Component({
     selector: 'sudoku-candidates',
@@ -20,15 +14,15 @@ export class CandidatesComponent {
     @Input()
     cell: Cell;
 
-    constructor(public app: CandidatesApp) { }
+    @Output() readonly candidateClicked = new EventEmitter<number>();
+    @Output() readonly candidateRightClicked = new EventEmitter<number>();
 
-    candidateClicked(candidate: number): void {
-        this.app.candidateClicked(this.cell, candidate);
+    onCandidateClicked(candidate: number): void {
+        this.candidateClicked.emit(candidate);
     }
 
-    candidateRightClicked(candidate: number): boolean {
-        this.app.candidateRightClicked(this.cell, candidate);
+    onCandidateRightClicked(candidate: number): boolean {
+        this.candidateRightClicked.emit(candidate);
         return false;
     }
-
 }

@@ -1,10 +1,10 @@
 <div class="button-bar">
-  <button mat-icon-button [ngClass]="app.digitCssClass(digit)" [disabled]="app.digitCssClass(digit).exhaustedDigit" class="digit"
-    *ngFor="let digit of [1, 2, 3, 4, 5, 6, 7, 8, 9]" (click)="app.digitClicked(digit)">{{ digit }}</button>
-  <button mat-icon-button [ngClass]="app.digitCssClass(0)" class="digit" (click)="app.candidatesClicked()" matTooltip="{{'editCandidates' | translate}}">
+  <button mat-icon-button [ngClass]="digitCssClass(digit)" [disabled]="digitCssClass(digit).exhaustedDigit" class="digit"
+    *ngFor="let digit of [1, 2, 3, 4, 5, 6, 7, 8, 9]" (click)="onDigitClicked(digit)">{{ digit }}</button>
+  <button mat-icon-button [ngClass]="digitCssClass(0)" class="digit" (click)="onCandidatesClicked()" matTooltip="{{'editCandidates' | translate}}">
     <mat-icon>edit</mat-icon>
   </button>
-  <button mat-icon-button [ngClass]="app.digitCssClass(0)" class="digit" (click)="app.undoClicked()" matTooltip="{{'undo' | translate}}">
+  <button mat-icon-button [ngClass]="digitCssClass(0)" class="digit" (click)="onUndoClicked()" matTooltip="{{'undo' | translate}}">
     <mat-icon>undo</mat-icon>
 </button>
 </div>

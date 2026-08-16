@@ -1,22 +1,22 @@
-<button mat-button (click)="app.newGame()">
+<button mat-button (click)="newGame.emit()">
     <mat-icon>play_circle</mat-icon>
     {{ 'newGame' | translate }}
 </button>
-<button mat-button (click)="app.ownGame()">
+<button mat-button (click)="ownGame.emit()">
     <mat-icon>edit</mat-icon>
     {{ 'ownGame' | translate }}
 </button>
-<button mat-button (click)="app.importGame()">
+<button mat-button (click)="importGame.emit()">
     <mat-icon>file_open</mat-icon>
     {{ 'importGame' | translate }}
 </button>
-<button mat-button (click)="app.resetGame()">
+<button mat-button (click)="resetGame.emit()">
     <mat-icon>refresh</mat-icon>
     {{ 'resetGame' | translate }}
 </button>
 <hr>
 
-<button mat-button (click)="app.about()">
+<button mat-button (click)="about.emit()">
     <mat-icon>info</mat-icon>
     {{ 'about' | translate }}
 </button>

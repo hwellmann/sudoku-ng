@@ -23,13 +23,13 @@ export class AppComponent implements OnDestroy {
 
     @ViewChild(MatSidenav, { static: true }) readonly sidenav!: MatSidenav;
 
-    constructor(private gameController: GameController, private translate: TranslateService) {
+    constructor(public game: GameController, private translate: TranslateService) {
         const browserLang = this.translate.getBrowserLang();
         const currentLanguage = this.supportedLanguages.includes(browserLang ?? '') ? browserLang! : 'en';
         this.translate.use(currentLanguage);
     }
 
     ngOnDestroy() {
-        this.gameController.onDestroy();
+        this.game.onDestroy();
     }
 }

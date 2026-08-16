@@ -1,23 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
+import { Sudoku } from '../generator/sudoku';
 
 export interface DigitCssClass {
     selectedDigit: boolean;
     exhaustedDigit: boolean;
     candidateDigit: boolean;
-}
-
-export abstract class DigitApp {
-    abstract readonly isUserDefined: boolean;
-
-    abstract digitClicked(value: number): void;
-    abstract candidatesClicked(): void;
-    abstract undoClicked(): void;
-    abstract digitCssClass(value: number): DigitCssClass;
 }
 
 @Component({
@@ -28,5 +20,36 @@ export abstract class DigitApp {
     templateUrl: './digit.component.html',
 })
 export class DigitComponent {
-    constructor(public app: DigitApp) { }
+    @Input()
+    sudoku: Sudoku;
+
+    @Input()
+    selectedDigit: number;
+
+    @Input()
+    candidateMode = false;
+
+    @Output() readonly digitClicked = new EventEmitter<number>();
+    @Output() readonly candidatesClicked = new EventEmitter<void>();
+    @Output() readonly undoClicked = new EventEmitter<void>();
+
+    digitCssClass(value: number): DigitCssClass {
+        return {
+            exhaustedDigit: this.sudoku.isExhausted(value),
+            selectedDigit: value === this.selectedDigit,
+            candidateDigit: this.candidateMode
+        };
+    }
+
+    onDigitClicked(value: number): void {
+        this.digitClicked.emit(value);
+    }
+
+    onCandidatesClicked(): void {
+        this.candidatesClicked.emit();
+    }
+
+    onUndoClicked(): void {
+        this.undoClicked.emit();
+    }
 }

@@ -3,14 +3,10 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Logger, getLogger } from '@log4js2/core';
-import { CandidatesApp } from './candidates/candidates.component';
-import { DigitApp, DigitCssClass } from './digit/digit.component';
 import { AsyncGenerator } from './generator/async-generator';
 import { BacktrackingSolver } from './generator/backtracking-solver';
-import { Cell, NUM_DIGITS } from './generator/cell';
+import { Cell } from './generator/cell';
 import { Sudoku } from './generator/sudoku';
-import { FieldCssClass, GridApp } from './grid/grid.component';
-import { SidenavApp } from './sidenav/sidenav.component';
 import { Action, Move } from './generator/move';
 import { APP_VERSION } from '../version';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
@@ -22,13 +18,12 @@ enum State {
 }
 
 @Injectable()
-export class GameController implements SidenavApp, GridApp, DigitApp, CandidatesApp {
-    isUserDefined: boolean;
+export class GameController {
 
     private readonly sudokuSignal = signal(new Sudoku());
     private readonly stateSignal = signal(State.PLAY);
-    private selectedDigit: number;
-    private selectedCell: Cell;
+    private selectedDigitValue: number;
+    private selectedCellValue: Cell;
     private moves: Move[] = [];
 
 
@@ -43,12 +38,29 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
             () => this.newGameFailed()
         );
     }
-    private get sudoku(): Sudoku {
+
+    get sudoku(): Sudoku {
         return this.sudokuSignal();
     }
 
     private set sudoku(value: Sudoku) {
         this.sudokuSignal.set(value);
+    }
+
+    get selectedDigit(): number {
+        return this.selectedDigitValue;
+    }
+
+    get selectedCell(): Cell {
+        return this.selectedCellValue;
+    }
+
+    get isEnterGameMode(): boolean {
+        return this.state === State.ENTER_GAME;
+    }
+
+    get isCandidateMode(): boolean {
+        return this.state === State.EDIT_CANDIDATES;
     }
 
     private get state(): State {
@@ -62,7 +74,7 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     private newGameGenerated(sudoku: Sudoku): void {
         this.sudoku = sudoku;
         this.state = State.PLAY;
-        this.selectedDigit = undefined;
+        this.selectedDigitValue = undefined;
         this.moves = [];
     }
 
@@ -95,8 +107,8 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         try {
             this.sudoku = Sudoku.fromString(text);
             this.state = State.PLAY;
-            this.selectedDigit = undefined;
-            this.selectedCell = undefined;
+            this.selectedDigitValue = undefined;
+            this.selectedCellValue = undefined;
             this.moves = [];
         } catch (error) {
             this.log.warn('failed to import game', error);
@@ -134,40 +146,29 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
         this.snackBar.open(this.translate.instant(messageKey, params), undefined, config);
     }
 
-    fieldClicked(row: number, col: number): void {
-        this.log.info(`clicked row ${row}, column ${col}`);
-        const cell: Cell = this.getField(row, col);
-        this.selectedCell = cell;
-        this.cellClicked(cell);
-    }
-
-    private cellClicked(cell: Cell): void {
-        this.selectedCell = cell;
-        if (this.selectedDigit === undefined) {
+    cellClicked(cell: Cell): void {
+        this.log.info(`clicked cell ${cell.index}`);
+        this.selectedCellValue = cell;
+        if (this.selectedDigitValue === undefined) {
             return;
         }
         if (this.state === State.ENTER_GAME) {
-            if (cell.isCandidate(this.selectedDigit)) {
-                this.sudoku.setCell(cell.index, this.selectedDigit);
-            } else if (cell.value === this.selectedDigit) {
+            if (cell.isCandidate(this.selectedDigitValue)) {
+                this.sudoku.setCell(cell.index, this.selectedDigitValue);
+            } else if (cell.value === this.selectedDigitValue) {
                 this.sudoku.clearCell(cell.index);
             } else {
                 this.sudoku.clearCell(cell.index);
-                this.sudoku.setCell(cell.index, this.selectedDigit);
+                this.sudoku.setCell(cell.index, this.selectedDigitValue);
             }
-        } else if (cell.isCandidate(this.selectedDigit)) {
+        } else if (cell.isCandidate(this.selectedDigitValue)) {
             const currentState = new Sudoku(this.sudoku);
-            this.moves.push(new Move(cell.index, this.selectedDigit, Action.SOLVE_CELL, currentState));
-            this.sudoku.setCell(cell.index, this.selectedDigit);
+            this.moves.push(new Move(cell.index, this.selectedDigitValue, Action.SOLVE_CELL, currentState));
+            this.sudoku.setCell(cell.index, this.selectedDigitValue);
             if (this.sudoku.isSolved()) {
                 this.openSnackBar('solved', 'solved');
             }
         }
-    }
-
-    getField(row: number, col: number): Cell {
-        const index = (row - 1) * NUM_DIGITS + (col - 1);
-        return this.sudoku.getCell(index);
     }
 
     candidatesClicked(): void {
@@ -196,49 +197,11 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     }
 
     digitClicked(value: number): void {
-        this.selectedDigit = value;
+        this.selectedDigitValue = value;
         if (this.state === State.EDIT_CANDIDATES) {
             this.state = State.PLAY;
         }
         this.log.info('selected digit {}', value);
-    }
-
-    digitCssClass(value: number): DigitCssClass {
-        return {
-            exhaustedDigit: this.sudoku.isExhausted(value),
-            selectedDigit: value === this.selectedDigit,
-            candidateDigit: this.state === State.EDIT_CANDIDATES
-        };
-    }
-
-    fieldCssClass(row: number, col: number): FieldCssClass {
-        const cell = this.getField(row, col);
-        return {
-            field: true,
-            initialClue: cell.given,
-            selectedDigitCandidate: this.selectedDigit && cell.isCandidate(this.selectedDigit) && this.state !== State.ENTER_GAME,
-            onlyOnePossibleDigit: cell.candidates.getCardinality() === 1,
-            selectedDigit: this.selectedDigit === cell.value,
-            selectedPosition: this.selectedCell && this.selectedCell.index === cell.index
-        };
-    }
-
-    fieldCssClasses(row: number, col: number): string {
-        const cell = this.getField(row, col);
-        const classes: string[] = [];
-        if (cell.candidates.getCardinality() === 1) {
-            classes.push('onlyOnePossibleDigit');
-        }
-        if (this.selectedDigit === cell.value) {
-            classes.push('selectedDigit');
-        }
-        if (this.selectedCell && this.selectedCell.index === cell.index) {
-            classes.push('selectedPosition');
-        }
-        if (this.selectedDigit && this.state !== State.ENTER_GAME && cell.isCandidate(this.selectedDigit)) {
-            classes.push('selectedDigitCandidate');
-        }
-        return classes.join(' ');
     }
 
     candidateClicked(cell: Cell, candidate: number): void {
@@ -253,17 +216,17 @@ export class GameController implements SidenavApp, GridApp, DigitApp, Candidates
     }
 
     candidateRightClicked(cell: Cell, candidate: number): void {
-        const oldSelectedDigit = this.selectedDigit;
-        this.selectedDigit = candidate;
+        const oldSelectedDigit = this.selectedDigitValue;
+        this.selectedDigitValue = candidate;
         this.cellClicked(cell);
-        this.selectedDigit = oldSelectedDigit;
+        this.selectedDigitValue = oldSelectedDigit;
     }
 
     private addOrRemoveCandidate(candidate: number, cell: Cell) {
         this.log.info('candidate {} clicked in cell {}', candidate, cell.index);
         if (cell.isCandidate(candidate)) {
             const currentState = new Sudoku(this.sudoku);
-            this.moves.push(new Move(cell.index, this.selectedDigit, Action.REMOVE_CANDIDATE, currentState));
+            this.moves.push(new Move(cell.index, this.selectedDigitValue, Action.REMOVE_CANDIDATE, currentState));
             cell.removeCandidate(candidate);
         }
     }

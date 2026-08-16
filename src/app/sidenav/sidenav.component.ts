@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,16 +10,6 @@ export interface Theme {
     backgroundColor: string;
 }
 
-export abstract class SidenavApp {
-
-    abstract newGame(): void;
-    abstract ownGame(): void;
-    abstract importGame(): void;
-    abstract resetGame(): void;
-
-    abstract about(): void;
-}
-
 @Component({
     selector: 'sudoku-sidenav',
     standalone: true,
@@ -29,6 +19,9 @@ export abstract class SidenavApp {
 })
 export class SidenavComponent {
 
-    constructor(public app: SidenavApp) {
-    }
+    @Output() readonly newGame = new EventEmitter<void>();
+    @Output() readonly ownGame = new EventEmitter<void>();
+    @Output() readonly importGame = new EventEmitter<void>();
+    @Output() readonly resetGame = new EventEmitter<void>();
+    @Output() readonly about = new EventEmitter<void>();
 }
