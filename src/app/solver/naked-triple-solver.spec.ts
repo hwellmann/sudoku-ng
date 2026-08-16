@@ -17,7 +17,7 @@ describe('NakedTripleSolver', () => {
 
 
     test('should find naked triple', () => {
-        const text = fs.readFileSync('src/assets/naked-triple-cand.txt', 'utf8');
+        const text = fs.readFileSync('test/naked-triple-cand.txt', 'utf8');
         const parser = new HodokuCandidatesParser();
         const sudoku = parser.parse(text);
         solver.sudoku = sudoku;

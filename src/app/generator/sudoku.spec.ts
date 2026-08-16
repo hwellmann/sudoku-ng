@@ -37,6 +37,11 @@ describe('Sudoku', () => {
             .toEqual([1, 3]);
     });
 
+    test('should reject invalid puzzle strings', () => {
+        expect(() => Sudoku.fromString('')).toThrow('length must be 81');
+        expect(() => Sudoku.fromString('x................................................................................')).toThrow('expected one of');
+    });
+
     test('should read from solution', () => {
         const solvedSudoku = {
             puzzle: '7....3.....9....3..5.7...9....2..4...7....9.6....8.....268...5.1....9...5....7.84',

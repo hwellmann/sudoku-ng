@@ -5,7 +5,7 @@ import { HodokuCandidatesParser } from './hodoku-parser';
 describe('HodokuCandidatesParser', () => {
 
     test('should parse', () => {
-        const text = fs.readFileSync('src/assets/naked-pair-cand.txt', 'utf8');
+        const text = fs.readFileSync('test/naked-pair-cand.txt', 'utf8');
         const parser = new HodokuCandidatesParser();
         const sudoku = parser.parse(text);
         expect(sudoku.getCell(2).candidates.getIndices()).toEqual([1, 2, 4]);

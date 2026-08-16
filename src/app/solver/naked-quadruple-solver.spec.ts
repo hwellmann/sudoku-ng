@@ -17,7 +17,7 @@ describe('NakedQuadrupleSolver', () => {
 
 
     test('should find naked quadruple', () => {
-        const text = fs.readFileSync('src/assets/naked-quadruple-cand.txt', 'utf8');
+        const text = fs.readFileSync('test/naked-quadruple-cand.txt', 'utf8');
         const parser = new HodokuCandidatesParser();
         const sudoku = parser.parse(text);
         solver.sudoku = sudoku;

@@ -17,7 +17,7 @@ describe('HiddenQuadrupleSolver', () => {
 
 
     test('should find hidden quadruple', () => {
-        const text = fs.readFileSync('src/assets/hidden-quadruple-cand.txt', 'utf8');
+        const text = fs.readFileSync('test/hidden-quadruple-cand.txt', 'utf8');
         const parser = new HodokuCandidatesParser();
         const sudoku = parser.parse(text);
         solver.sudoku = sudoku;
