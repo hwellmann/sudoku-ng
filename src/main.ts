@@ -1,4 +1,5 @@
 import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
+import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { configure, LogLevel } from '@log4js2/core';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -19,6 +20,10 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideZonelessChangeDetection(),
+    {
+      provide: MAT_ICON_DEFAULT_OPTIONS,
+      useValue: { fontSet: 'material-symbols-outlined' }
+    },
     importProvidersFrom(
       TranslateModule.forRoot({
         fallbackLang: 'en',
