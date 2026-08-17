@@ -26,7 +26,7 @@ jobs:
       run: |
         git config user.name 'github-actions[bot]'
         git config user.email 'github-actions[bot]@users.noreply.github.com'
-        npm version "${{ inputs.version }}" -m 'Release v%s'
+        npm version "${{ inputs.version }}" --tag-version-prefix="" -m 'Release %s'
         git push --follow-tags
     - name: Build
       run: |
