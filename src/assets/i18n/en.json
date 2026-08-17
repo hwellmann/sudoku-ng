@@ -1,6 +1,6 @@
 {
     "about": "About",
-    "editCandidates": "Edit Candidates",
+    "editCandidates": "Remove Candidates",
     "newGame": "New Game",
     "ownGame": "Enter Game",
     "importGame": "Import Game",
@@ -16,5 +16,6 @@
     "solved": "Solved!",
     "noSolution": "This Sudoku has no solution",
     "multipleSolutions": "This Sudoku has more than one solution",
-    "resetGame": "Reset Game"
+    "resetGame": "Reset Game",
+    "fillCell": "Fill Cell"
 }

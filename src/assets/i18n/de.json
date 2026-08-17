@@ -1,6 +1,6 @@
 {
     "about": "Über",
-    "editCandidates": "Kandidaten bearbeiten",
+    "editCandidates": "Kandidaten entfernen",
     "undo": "Letzten Zug zurücknehmen",
     "newGame": "Neues Spiel",
     "ownGame": "Spiel eingeben",
@@ -16,5 +16,6 @@
     "solved": "Geschafft!",
     "noSolution": "Dieses Sudoku hat keine Lösung",
     "multipleSolutions": "Dieses Sudoku hat mehr als eine Lösung",
-    "resetGame": "Spiel zurücksetzen"
+    "resetGame": "Spiel zurücksetzen",
+    "fillCell": "Feld ausfüllen"
 }
