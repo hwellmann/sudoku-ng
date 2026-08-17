@@ -49,6 +49,14 @@ export class Cell {
         return this.digit === 0;
     }
 
+    isNakedSingle(): boolean {
+        return this.candidates.getCardinality() === 1;
+    }
+
+    firstCandidate(): number {
+        return this.candidates.nextSetBit(0);
+    }
+
     isCandidate(digit: number): boolean {
         return this.candidates.get(digit);
     }

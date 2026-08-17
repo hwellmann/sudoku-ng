@@ -26,7 +26,8 @@ describe('GameController keyboard entry', () => {
             snackBar as MatSnackBar,
             translate as TranslateService,
             dialog as MatDialog
-        ); controller.ownGame();
+        ); 
+        controller.ownGame();
     });
 
     afterEach(() => controller.onDestroy());

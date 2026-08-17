@@ -32,6 +32,7 @@ export class DigitComponent {
     @Output() readonly digitClicked = new EventEmitter<number>();
     @Output() readonly candidatesClicked = new EventEmitter<void>();
     @Output() readonly undoClicked = new EventEmitter<void>();
+    @Output() readonly fillClicked = new EventEmitter<void>();
 
     digitCssClass(value: number): DigitCssClass {
         return {
@@ -52,4 +53,9 @@ export class DigitComponent {
     onUndoClicked(): void {
         this.undoClicked.emit();
     }
+
+    onFillClicked(): void {
+        this.fillClicked.emit();
+    }
+
 }

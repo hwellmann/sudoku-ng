@@ -30,6 +30,7 @@
                 [candidateMode]="game.isCandidateMode"
                 (digitClicked)="game.digitClicked($event)"
                 (candidatesClicked)="game.candidatesClicked()"
+                (fillClicked)="game.fillClicked()"
                 (undoClicked)="game.undoClicked()"></sudoku-digit>
         </footer>
     </mat-sidenav-content>

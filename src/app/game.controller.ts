@@ -77,6 +77,7 @@ export class GameController {
         this.sudoku = sudoku;
         this.state = State.PLAY;
         this.selectedDigitValue = undefined;
+        this.selectedCellValue = undefined;
         this.moves = [];
     }
 
@@ -197,19 +198,23 @@ export class GameController {
                 this.selectedCellValue = this.sudoku.cells[this.keyboardCellIndex];
             }
         } else if (cell.isCandidate(this.selectedDigitValue)) {
-            const currentState = new Sudoku(this.sudoku);
-            this.moves.push(new Move(cell.index, this.selectedDigitValue, Action.SOLVE_CELL, currentState));
-            this.sudoku.setCell(cell.index, this.selectedDigitValue);
-            if (this.sudoku.isSolved()) {
-                this.openSnackBar('solved', 'solved');
-            }
+            this.solveCell(cell, this.selectedDigitValue);
+        }
+    }
+
+    private solveCell(cell: Cell, digit: number): void {
+        const currentState = new Sudoku(this.sudoku);
+        this.moves.push(new Move(cell.index, digit, Action.SOLVE_CELL, currentState));
+        this.sudoku.setCell(cell.index, digit);
+        if (this.sudoku.isSolved()) {
+            this.openSnackBar('solved', 'solved');
         }
     }
 
     candidatesClicked(): void {
         if (this.state === State.PLAY) {
             this.state = State.EDIT_CANDIDATES;
-            this.log.info('edit candidates');
+            this.log.info('start editing candidates');
         } else if (this.state === State.ENTER_GAME) {
             this.state = State.PLAY;
             const puzzle = new Sudoku(this.sudoku);
@@ -231,11 +236,15 @@ export class GameController {
         }
     }
 
-    digitClicked(value: number): void {
-        this.selectedDigitValue = value;
+    fillClicked(): void {
         if (this.state === State.EDIT_CANDIDATES) {
             this.state = State.PLAY;
+            this.log.info('stop editing candidates');
         }
+    }
+
+    digitClicked(value: number): void {
+        this.selectedDigitValue = value;
         this.log.info('selected digit {}', value);
     }
 
@@ -243,8 +252,13 @@ export class GameController {
         if (cell.isFilled()) {
             return;
         }
+        if (cell.isNakedSingle()) {
+            const digit = cell.firstCandidate();
+            this.solveCell(cell, digit);
+        }
+
         if (this.state === State.EDIT_CANDIDATES) {
-            this.addOrRemoveCandidate(candidate, cell);
+            this.removeCandidate(cell);
         } else {
             this.cellClicked(cell);
         }
@@ -282,6 +296,10 @@ export class GameController {
             this.candidatesClicked();
             return true;
         }
+        if (key.toUpperCase() === 'F') {
+            this.fillClicked();
+            return true;
+        }
         if (key.toUpperCase() === 'U') {
             this.undoClicked();
             return true;
@@ -302,12 +320,12 @@ export class GameController {
         this.selectedCellValue = this.sudoku.cells[this.keyboardCellIndex];
     }
 
-    private addOrRemoveCandidate(candidate: number, cell: Cell) {
-        this.log.info('candidate {} clicked in cell {}', candidate, cell.index);
-        if (cell.isCandidate(candidate)) {
+    private removeCandidate(cell: Cell) {
+        this.log.info('candidate {} clicked in cell {}', this.selectedDigitValue, cell.index);
+        if (this.selectedDigitValue && cell.isCandidate(this.selectedDigitValue)) {
             const currentState = new Sudoku(this.sudoku);
             this.moves.push(new Move(cell.index, this.selectedDigitValue, Action.REMOVE_CANDIDATE, currentState));
-            cell.removeCandidate(candidate);
+            cell.removeCandidate(this.selectedDigitValue);
         }
     }
 
