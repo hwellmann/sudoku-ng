@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Sudoku } from '../generator/sudoku';
 
 export interface DigitCssClass {
@@ -15,7 +15,7 @@ export interface DigitCssClass {
 @Component({
     selector: 'sudoku-digit',
     standalone: true,
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslateModule],
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './digit.component.html',
 })

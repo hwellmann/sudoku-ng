@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface Theme {
     name: string;
@@ -13,7 +13,7 @@ export interface Theme {
 @Component({
     selector: 'sudoku-sidenav',
     standalone: true,
-    imports: [MatButtonModule, MatIconModule, TranslateModule],
+    imports: [MatButtonModule, MatIconModule, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './sidenav.component.html',
 })
