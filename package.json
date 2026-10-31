@@ -42,7 +42,7 @@
     "@angular/language-service": "~22.1.4",
     "@schematics/angular": "~22.1.4",
     "@types/node": "^22.0.0",
-    "happy-dom": "^20.11.6",
+    "happy-dom": "^21.0.4",
     "ts-node": "~10.9.2",
     "typescript": "~6.0.3",
     "vitest": "^4.1.10"
